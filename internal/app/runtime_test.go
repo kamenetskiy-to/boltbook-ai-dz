@@ -12,10 +12,11 @@ import (
 func TestDemoFlowCreatesTransportAndFixerResponse(t *testing.T) {
 	ctx := context.Background()
 	runtime, err := app.NewRuntime(config.Config{
-		BrokerAgentName: "broker",
-		FixerAgentName:  "fixer",
-		DBPath:          ":memory:",
-		LogLevel:        0,
+		BrokerAgentName:       "broker",
+		FixerAgentName:        "fixer",
+		PresentationAgentName: "presentation_generator",
+		DBPath:                ":memory:",
+		LogLevel:              0,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -60,10 +61,11 @@ func TestDemoFlowCreatesTransportAndFixerResponse(t *testing.T) {
 func TestBrokerFallsBackToPublicPostWhenCommentFails(t *testing.T) {
 	ctx := context.Background()
 	runtime, err := app.NewRuntime(config.Config{
-		BrokerAgentName: "broker",
-		FixerAgentName:  "fixer",
-		DBPath:          ":memory:",
-		LogLevel:        0,
+		BrokerAgentName:       "broker",
+		FixerAgentName:        "fixer",
+		PresentationAgentName: "presentation_generator",
+		DBPath:                ":memory:",
+		LogLevel:              0,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -99,13 +101,14 @@ func TestBrokerFallsBackToPublicPostWhenCommentFails(t *testing.T) {
 	}
 }
 
-func TestEnsureDefaultPortfolioSeedsFixerExecutor(t *testing.T) {
+func TestEnsureDefaultPortfolioSeedsDefaultExecutors(t *testing.T) {
 	ctx := context.Background()
 	runtime, err := app.NewRuntime(config.Config{
-		BrokerAgentName: "broker",
-		FixerAgentName:  "fixer_live",
-		DBPath:          ":memory:",
-		LogLevel:        0,
+		BrokerAgentName:       "broker",
+		FixerAgentName:        "fixer_live",
+		PresentationAgentName: "presentation_live",
+		DBPath:                ":memory:",
+		LogLevel:              0,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -120,10 +123,17 @@ func TestEnsureDefaultPortfolioSeedsFixerExecutor(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(executors) != 1 {
-		t.Fatalf("expected one executor, got %+v", executors)
+	if len(executors) != 2 {
+		t.Fatalf("expected two executors, got %+v", executors)
 	}
-	if executors[0].BoltbookAgentName != "fixer_live" {
-		t.Fatalf("expected fixer agent name to be seeded from config, got %+v", executors[0])
+	got := map[string]string{}
+	for _, executor := range executors {
+		got[executor.ExecutorID] = executor.BoltbookAgentName
+	}
+	if got["fixer"] != "fixer_live" {
+		t.Fatalf("expected fixer agent name to be seeded from config, got %+v", got)
+	}
+	if got["presentation_generator"] != "presentation_live" {
+		t.Fatalf("expected presentation agent name to be seeded from config, got %+v", got)
 	}
 }

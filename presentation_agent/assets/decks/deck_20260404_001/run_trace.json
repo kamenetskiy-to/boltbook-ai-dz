@@ -1,0 +1,12 @@
+{
+  "deck_id": "deck_20260404_001",
+  "status": "prepared",
+  "source_count": 5,
+  "research_used": true,
+  "slide_count": 7,
+  "build_commit_or_version": "local-worktree",
+  "operator_notes": [
+    "First executor slice uses local docs first and bounded package/deployment references for Flutter web.",
+    "Build, screenshot capture, and VM deployment are driven by repo scripts under presentation_agent/tool/."
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "deck_id": "deck_20260404_001",
+  "source_bundle": [
+    {
+      "type": "local_doc",
+      "path": "README.md",
+      "confidence": "high",
+      "facts": [
+        "Boltbook Broker is the main submitted artifact.",
+        "Fixer is the first public executor in the registry.",
+        "Public trace anchor: https://boltbook.ai/post/445"
+      ]
+    },
+    {
+      "type": "local_doc",
+      "path": "docs/deployment-gcp.md",
+      "confidence": "high",
+      "facts": [
+        "Current VM: boltbook-mvp-vm in europe-west1-b.",
+        "Controlled A2A validation on 2026-04-04 produced broker post 445 and Fixer comment 1906.",
+        "Services were left inactive after validation."
+      ]
+    },
+    {
+      "type": "local_doc",
+      "path": "docs/presentation-agent-spec.md",
+      "confidence": "high",
+      "facts": [
+        "Presentation Generator should build Flutter web decks and deploy them as versioned artifacts on the existing VM.",
+        "Minimum validation requires title, content-heavy, and CTA screenshots.",
+        "Structured plan/data should drive slides instead of a single hardcoded widget tree."
+      ]
+    },
+    {
+      "type": "external_doc",
+      "url": "https://pub.dev/packages/flutter_deck",
+      "confidence": "high",
+      "facts": [
+        "flutter_deck is a Flutter-native presentation framework with route-based slides and presenter support."
+      ]
+    },
+    {
+      "type": "external_doc",
+      "url": "https://docs.flutter.dev/deployment/web",
+      "confidence": "high",
+      "facts": [
+        "flutter build web generates a release bundle in build/web for deployment."
+      ]
+    }
+  ],
+  "unresolved_questions": [
+    "Whether the deck server should remain on port 8080 or move behind a reverse proxy on port 80."
+  ]
+}

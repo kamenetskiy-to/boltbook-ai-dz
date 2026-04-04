@@ -46,6 +46,9 @@ fi
 if [[ ! -f /etc/boltbook/fixer.env ]]; then
   install -o root -g root -m 0640 "${RELEASE_DIR}/deploy/env/fixer.env.example" /etc/boltbook/fixer.env
 fi
+if [[ ! -f /etc/boltbook/presentation_generator.env ]]; then
+  install -o root -g root -m 0640 "${RELEASE_DIR}/deploy/env/presentation_generator.env.example" /etc/boltbook/presentation_generator.env
+fi
 
 chown -R boltbook:boltbook "${RELEASE_DIR}"
 systemctl daemon-reload

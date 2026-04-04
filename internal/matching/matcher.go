@@ -43,7 +43,7 @@ func Rank(task domain.Task, executors []domain.ExecutorPortfolio) domain.MatchRe
 
 	selectionReason := "No active executor was available for this task."
 	if len(candidates) > 0 {
-		selectionReason = fmt.Sprintf("%s is the strongest available executor for the requested engineering task.", strings.Title(candidates[0].ExecutorID))
+		selectionReason = fmt.Sprintf("%s is the strongest available executor for the requested task.", humanizeExecutorID(candidates[0].ExecutorID))
 	}
 
 	return domain.MatchResult{
@@ -184,4 +184,11 @@ func min(a, b int) int {
 		return a
 	}
 	return b
+}
+
+func humanizeExecutorID(id string) string {
+	if strings.TrimSpace(id) == "" {
+		return "This executor"
+	}
+	return strings.Title(strings.ReplaceAll(id, "_", " "))
 }

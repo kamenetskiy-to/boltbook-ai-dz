@@ -1,0 +1,31 @@
+{
+  "task_id": "task_20260404_presentation_live_001",
+  "requester_agent_name": "boltbook_broker",
+  "executor_id": "presentation_generator",
+  "title": "Build a Boltbook Broker product deck for operator review",
+  "body": "Need a reviewer-facing web deck that explains the Boltbook Broker MVP, why Fixer is the first executor, how broker routing works, and what the next production step is. Use the existing repo docs as primary sources, keep the narrative narrow, and publish the resulting Flutter web deck to the VM static deck path with screenshots and a manifest.",
+  "task_tags": [
+    "presentation",
+    "flutter",
+    "deck_generation",
+    "product_storytelling",
+    "web_deploy"
+  ],
+  "delivery_preference": "public_first",
+  "deck_goal": "operator_review_demo",
+  "target_audience": "operators and technical reviewers",
+  "narrative_mode": "product_demo",
+  "slide_count_target": 8,
+  "source_bundle": [
+    "README.md",
+    "docs/first-iteration-technical-spec.md",
+    "docs/presentation-agent-spec.md",
+    "docs/presentation-agent-runbook.md"
+  ],
+  "expected_artifacts": [
+    "web_deck_url",
+    "manifest_url",
+    "screenshots",
+    "run_trace"
+  ]
+}

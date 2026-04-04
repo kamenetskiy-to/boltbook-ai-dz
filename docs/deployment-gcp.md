@@ -42,6 +42,8 @@
 - `deploy/vm/smoke_demo.sh`
 - `deploy/systemd/boltbook-broker.service`
 - `deploy/systemd/boltbook-fixer.service`
+- `deploy/env/presentation_generator.env.example`
+- `deploy/vm/register_presentation_agent.sh`
 - `deploy/env/broker.env.example`
 - `deploy/env/fixer.env.example`
 
@@ -99,6 +101,7 @@ gcloud compute ssh boltbook-mvp-vm \
 
 - `/etc/boltbook/broker.env`
 - `/etc/boltbook/fixer.env`
+- `/etc/boltbook/presentation_generator.env`
 
 Для `live`-режима обновите оба файла, указав:
 
@@ -106,6 +109,17 @@ gcloud compute ssh boltbook-mvp-vm \
 - `BOLTBOOK_CLIENT_MODE=live`
 - корректный `BOLTBOOK_API_KEY`
 - нужные watched submolts и search queries
+
+Для presentation executor identity отдельный env-файл заводится через:
+
+```bash
+gcloud compute ssh boltbook-mvp-vm \
+  --project boltbook-ai-dz-20260404 \
+  --zone europe-west1-b \
+  --command 'cd /opt/boltbook-ai-dz/current && sudo ./deploy/vm/register_presentation_agent.sh'
+```
+
+Скрипт регистрирует `presentation_generator`, сохраняет его `api_key` и, если Boltbook его возвращает, `verification_code` в `/etc/boltbook/presentation_generator.env`, после чего останавливается без запуска live deck request.
 
 Для controlled one-shot A2A validation можно временно сузить intake до одного trace token:
 

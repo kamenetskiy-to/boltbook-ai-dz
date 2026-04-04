@@ -10,55 +10,57 @@ import (
 )
 
 type Config struct {
-	BrokerAgentName     string
-	FixerAgentName      string
-	BoltbookClientMode  string
-	BoltbookAPIKey      string
-	BoltbookAPIBaseURL  string
-	BoltbookSubmolt     string
-	BoltbookIntakeLimit int
+	BrokerAgentName          string
+	FixerAgentName           string
+	PresentationAgentName    string
+	BoltbookClientMode       string
+	BoltbookAPIKey           string
+	BoltbookAPIBaseURL       string
+	BoltbookSubmolt          string
+	BoltbookIntakeLimit      int
 	BrokerIntakeFromFeed     bool
 	BrokerIntakeFromSubmolts bool
 	BrokerIntakeFromSearch   bool
 	FixerSearchQueries       []string
 	FixerInboxFromDMs        bool
-	FixerCodexEnabled   bool
-	CodexCLIPath        string
-	CodexHome           string
-	CodexModel          string
-	CodexTimeout        time.Duration
-	DBPath              string
-	BrokerPollInterval  time.Duration
-	FixerPollInterval   time.Duration
-	LogLevel            slog.Level
-	WatchedSubmolts     []string
-	SearchQueries       []string
-	DryRun              bool
-	RunOnce             bool
+	FixerCodexEnabled        bool
+	CodexCLIPath             string
+	CodexHome                string
+	CodexModel               string
+	CodexTimeout             time.Duration
+	DBPath                   string
+	BrokerPollInterval       time.Duration
+	FixerPollInterval        time.Duration
+	LogLevel                 slog.Level
+	WatchedSubmolts          []string
+	SearchQueries            []string
+	DryRun                   bool
+	RunOnce                  bool
 }
 
 func Load() (Config, error) {
 	cfg := Config{
-		BrokerAgentName:    envOr("BOLTBOOK_BROKER_AGENT_NAME", "boltbook_broker"),
-		FixerAgentName:     envOr("BOLTBOOK_FIXER_AGENT_NAME", "fixer"),
-		BoltbookClientMode: envOr("BOLTBOOK_CLIENT_MODE", "fake"),
-		BoltbookAPIKey:     strings.TrimSpace(os.Getenv("BOLTBOOK_API_KEY")),
-		BoltbookAPIBaseURL: envOr("BOLTBOOK_API_BASE_URL", "https://api.boltbook.ai"),
-		BoltbookSubmolt:    envOr("BOLTBOOK_DEFAULT_SUBMOLT", "general"),
+		BrokerAgentName:          envOr("BOLTBOOK_BROKER_AGENT_NAME", "boltbook_broker"),
+		FixerAgentName:           envOr("BOLTBOOK_FIXER_AGENT_NAME", "fixer"),
+		PresentationAgentName:    envOr("BOLTBOOK_PRESENTATION_AGENT_NAME", "presentation_generator"),
+		BoltbookClientMode:       envOr("BOLTBOOK_CLIENT_MODE", "fake"),
+		BoltbookAPIKey:           strings.TrimSpace(os.Getenv("BOLTBOOK_API_KEY")),
+		BoltbookAPIBaseURL:       envOr("BOLTBOOK_API_BASE_URL", "https://api.boltbook.ai"),
+		BoltbookSubmolt:          envOr("BOLTBOOK_DEFAULT_SUBMOLT", "general"),
 		BrokerIntakeFromFeed:     envBoolOr("BOLTBOOK_BROKER_INTAKE_FROM_FEED", true),
 		BrokerIntakeFromSubmolts: envBoolOr("BOLTBOOK_BROKER_INTAKE_FROM_SUBMOLTS", true),
 		BrokerIntakeFromSearch:   envBoolOr("BOLTBOOK_BROKER_INTAKE_FROM_SEARCH", true),
 		FixerSearchQueries:       splitCSV(os.Getenv("BOLTBOOK_FIXER_SEARCH_QUERIES")),
 		FixerInboxFromDMs:        envBoolOr("BOLTBOOK_FIXER_INBOX_FROM_DMS", true),
-		FixerCodexEnabled:  parseBool(os.Getenv("BOLTBOOK_FIXER_CODEX_ENABLED")),
-		CodexCLIPath:       envOr("BOLTBOOK_CODEX_CLI_PATH", "codex"),
-		CodexHome:          strings.TrimSpace(os.Getenv("BOLTBOOK_CODEX_HOME")),
-		CodexModel:         envOr("BOLTBOOK_CODEX_MODEL", "gpt-5.3-codex-spark"),
-		DBPath:             envOr("BOLTBOOK_DB_PATH", "boltbook.db"),
-		WatchedSubmolts:    splitCSV(os.Getenv("BOLTBOOK_WATCHED_SUBMOLTS")),
-		SearchQueries:      splitCSV(os.Getenv("BOLTBOOK_SEARCH_QUERIES")),
-		DryRun:             parseBool(os.Getenv("BOLTBOOK_DRY_RUN")),
-		RunOnce:            parseBool(os.Getenv("BOLTBOOK_RUN_ONCE")),
+		FixerCodexEnabled:        parseBool(os.Getenv("BOLTBOOK_FIXER_CODEX_ENABLED")),
+		CodexCLIPath:             envOr("BOLTBOOK_CODEX_CLI_PATH", "codex"),
+		CodexHome:                strings.TrimSpace(os.Getenv("BOLTBOOK_CODEX_HOME")),
+		CodexModel:               envOr("BOLTBOOK_CODEX_MODEL", "gpt-5.3-codex-spark"),
+		DBPath:                   envOr("BOLTBOOK_DB_PATH", "boltbook.db"),
+		WatchedSubmolts:          splitCSV(os.Getenv("BOLTBOOK_WATCHED_SUBMOLTS")),
+		SearchQueries:            splitCSV(os.Getenv("BOLTBOOK_SEARCH_QUERIES")),
+		DryRun:                   parseBool(os.Getenv("BOLTBOOK_DRY_RUN")),
+		RunOnce:                  parseBool(os.Getenv("BOLTBOOK_RUN_ONCE")),
 	}
 
 	var err error

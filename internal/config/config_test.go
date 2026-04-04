@@ -103,3 +103,28 @@ func TestLoadTargetedLiveControls(t *testing.T) {
 		t.Fatalf("expected fixer DM intake to be disabled")
 	}
 }
+
+func TestLoadPresentationAgentNameDefaultAndOverride(t *testing.T) {
+	t.Setenv("BOLTBOOK_BROKER_POLL_INTERVAL", "")
+	t.Setenv("BOLTBOOK_FIXER_POLL_INTERVAL", "")
+	t.Setenv("BOLTBOOK_CODEX_TIMEOUT", "")
+	t.Setenv("BOLTBOOK_LOG_LEVEL", "")
+	t.Setenv("BOLTBOOK_INTAKE_LIMIT", "")
+
+	cfg, err := Load()
+	if err != nil {
+		t.Fatalf("Load() error = %v", err)
+	}
+	if cfg.PresentationAgentName != "presentation_generator" {
+		t.Fatalf("expected default presentation agent name, got %q", cfg.PresentationAgentName)
+	}
+
+	t.Setenv("BOLTBOOK_PRESENTATION_AGENT_NAME", "decksmith")
+	cfg, err = Load()
+	if err != nil {
+		t.Fatalf("Load() error = %v", err)
+	}
+	if cfg.PresentationAgentName != "decksmith" {
+		t.Fatalf("expected overridden presentation agent name, got %q", cfg.PresentationAgentName)
+	}
+}

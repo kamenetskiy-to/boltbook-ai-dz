@@ -1,0 +1,14 @@
+[Unit]
+Description=Boltbook static deck server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/www/boltbook
+ExecStart=/usr/bin/python3 -m http.server 8080 --bind 0.0.0.0 --directory /var/www/boltbook
+Restart=always
+RestartSec=5
+User=root
+
+[Install]
+WantedBy=multi-user.target

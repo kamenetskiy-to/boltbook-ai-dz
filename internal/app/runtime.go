@@ -65,7 +65,28 @@ func (r *Runtime) Close() error {
 }
 
 func (r *Runtime) EnsureDefaultPortfolio(ctx context.Context) error {
-	portfolio := domain.ExecutorPortfolio{
+	return r.EnsureDefaultPortfolios(ctx)
+}
+
+func (r *Runtime) EnsureDefaultPortfolios(ctx context.Context) error {
+	for _, portfolio := range r.defaultPortfolios() {
+		if err := r.BrokerService.AddPortfolio(ctx, portfolio); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (r *Runtime) defaultPortfolios() []domain.ExecutorPortfolio {
+	now := time.Now().UTC()
+	return []domain.ExecutorPortfolio{
+		r.defaultFixerPortfolio(now),
+		r.defaultPresentationPortfolio(now),
+	}
+}
+
+func (r *Runtime) defaultFixerPortfolio(now time.Time) domain.ExecutorPortfolio {
+	return domain.ExecutorPortfolio{
 		ExecutorID:        "fixer",
 		BoltbookAgentName: r.Config.FixerAgentName,
 		DisplayName:       "Fixer",
@@ -87,12 +108,46 @@ func (r *Runtime) EnsureDefaultPortfolio(ctx context.Context) error {
 		},
 		TrustSignals: domain.TrustSignals{
 			OperatorCurated: true,
-			LastValidatedAt: time.Now().UTC(),
+			LastValidatedAt: now,
 		},
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
+		CreatedAt: now,
+		UpdatedAt: now,
 	}
-	return r.BrokerService.AddPortfolio(ctx, portfolio)
+}
+
+func (r *Runtime) defaultPresentationPortfolio(now time.Time) domain.ExecutorPortfolio {
+	return domain.ExecutorPortfolio{
+		ExecutorID:        "presentation_generator",
+		BoltbookAgentName: r.Config.PresentationAgentName,
+		DisplayName:       "Presentation Generator",
+		Summary:           "Builds narrow product, demo, and technical presentations as Flutter web decks.",
+		CapabilityTags:    []string{"presentation", "flutter", "deck_generation", "product_storytelling", "web_deploy"},
+		ServiceModes:      []string{"lead_intake", "brief_intake", "outline_generation", "deck_build", "screenshot_validation"},
+		TransportPreferences: []domain.TransportMode{
+			domain.TransportModePublicComment,
+			domain.TransportModePublicPost,
+			domain.TransportModeDMRequest,
+		},
+		AvailabilityState: domain.AvailabilityActive,
+		PortfolioEvidence: []domain.PortfolioEvidence{
+			{
+				Kind:      "spec",
+				SourceURL: "docs/presentation-agent-spec.md",
+				Excerpt:   "Flutter web deck executor for presentation and demo narratives.",
+			},
+			{
+				Kind:      "artifact",
+				SourceURL: "docs/presentation-agent-runbook.md",
+				Excerpt:   "Runbook covers build, screenshots, VM deploy, and static deck serving.",
+			},
+		},
+		TrustSignals: domain.TrustSignals{
+			OperatorCurated: true,
+			LastValidatedAt: now,
+		},
+		CreatedAt: now,
+		UpdatedAt: now,
+	}
 }
 
 func (r *Runtime) SeedDemoData(ctx context.Context) error {

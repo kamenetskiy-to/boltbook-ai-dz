@@ -1,0 +1,260 @@
+{
+  "task_id": "task_20260404_presentation_001",
+  "executor_id": "presentation_generator",
+  "deck_id": "deck_20260404_001",
+  "deck_title": "Boltbook Broker MVP",
+  "deck_goal": "Reviewer-facing Flutter web deck for the current Boltbook Broker project.",
+  "target_audience": "reviewer",
+  "narrative_mode": "technical_product",
+  "slide_count_target": 7,
+  "sources_used": [
+    "README.md",
+    "docs/first-iteration-technical-spec.md",
+    "docs/deployment-gcp.md",
+    "docs/presentation-agent-spec.md",
+    "https://pub.dev/packages/flutter_deck",
+    "https://docs.flutter.dev/deployment/web"
+  ],
+  "open_risks": [
+    "The first deck runner still targets one handcrafted deck dataset rather than a generic outline-to-deck generator."
+  ],
+  "asset_requests": [],
+  "slides": [
+    {
+      "slide_id": "title",
+      "kind": "title",
+      "route": "/intro",
+      "title": "Boltbook Broker MVP",
+      "eyebrow": "REVIEWER DECK",
+      "subtitle": "Flutter web deck generated for the live broker -> fixer -> public trace path.",
+      "headline": "One narrow artifact, one real executor, one public proof path.",
+      "key_points": [],
+      "evidence_refs": [
+        "README.md",
+        "docs/presentation-agent-spec.md"
+      ],
+      "metrics": [
+        {
+          "label": "Public agents",
+          "value": "2 identities"
+        },
+        {
+          "label": "Infra shape",
+          "value": "1 VM"
+        },
+        {
+          "label": "Real proof",
+          "value": "post 445"
+        }
+      ],
+      "visual_direction": "Large headline, live-proof metrics, and a dark technical stage rather than a generic marketing cover.",
+      "notes": "- Open with the project claim: honest broker wedge, not a fake marketplace.\n- Point to the public trace as proof that the artifact is already live."
+    },
+    {
+      "slide_id": "problem_space",
+      "kind": "problem",
+      "route": "/problem-space",
+      "title": "boltbook.ai is a social API layer, not a finished marketplace",
+      "eyebrow": "PROBLEM",
+      "headline": "The environment is early, noisy, and missing the primitives a real agent registry would want.",
+      "subtitle": "That constraint shapes the MVP: local registry, narrow transport strategy, and honest discovery limits.",
+      "key_points": [
+        "There is no verified list-all-agents endpoint, so executor discovery cannot depend on platform-wide sync.",
+        "DM is consent-gated, which means public threads and broker-authored posts must remain first-class transport paths.",
+        "The product truth is social interaction first: posts, comments, follows, submolts, and manual seeding."
+      ],
+      "evidence_refs": [
+        "README.md",
+        "docs/boltbook-api-capabilities-audit.md",
+        "docs/implementation-plan.md"
+      ],
+      "metrics": [
+        {
+          "label": "Discovery model",
+          "value": "feed/search/manual"
+        },
+        {
+          "label": "DM reality",
+          "value": "consent-gated"
+        }
+      ],
+      "visual_direction": "High-contrast cards that frame product constraints as engineering inputs, not excuses.",
+      "notes": "- Establish why the architecture keeps the authoritative registry in SQLite.\n- Make the problem feel concrete: the platform is promising, but its current primitives are incomplete."
+    },
+    {
+      "slide_id": "broker_artifact",
+      "kind": "solution",
+      "route": "/broker-artifact",
+      "title": "Broker is the narrow wedge that turns social signals into execution",
+      "eyebrow": "SOLUTION",
+      "headline": "The MVP ships a registry agent that stores executor portfolios, ranks candidates, explains fit, and initiates contact.",
+      "subtitle": "Fixer is the first real executor in that registry, not a synthetic placeholder profile.",
+      "key_points": [
+        "Boltbook Broker keeps portfolios and matching state locally, so the core recommendation path stays deterministic.",
+        "Model Colloquium already exists as an architectural seam even though the current evaluators are mocked.",
+        "Transport fallbacks are explicit: public reply, public broker-authored post, DM request, approved DM."
+      ],
+      "evidence_refs": [
+        "README.md",
+        "docs/first-iteration-technical-spec.md",
+        "docs/handoff.md"
+      ],
+      "metrics": [
+        {
+          "label": "First executor",
+          "value": "Fixer"
+        },
+        {
+          "label": "Registry truth",
+          "value": "SQLite"
+        },
+        {
+          "label": "Future seam",
+          "value": "Colloquium"
+        }
+      ],
+      "visual_direction": "Use compact evidence chips on the side so the broker claim reads as implemented capability, not aspiration.",
+      "notes": "- Frame Fixer as the first durable executor identity.\n- Mention that Fixer MCP is the internal control plane, while Fixer is the public-facing executor identity."
+    },
+    {
+      "slide_id": "runtime_architecture",
+      "kind": "architecture",
+      "route": "/runtime-architecture",
+      "title": "The runtime stays intentionally small",
+      "eyebrow": "ARCHITECTURE",
+      "headline": "Two Go runtimes, one shared VM, one local registry, and a clear seam for future executor expansion.",
+      "key_points": [
+        "Broker and Fixer remain separate public identities even when they share a VM in the first iteration.",
+        "The persisted trace answers what ran, what it examined, what transport it attempted, and what side effects happened.",
+        "Presentation Generator now starts as a job-style executor that publishes versioned Flutter web artifacts beside the Go services."
+      ],
+      "evidence_refs": [
+        "docs/first-iteration-technical-spec.md",
+        "docs/deployment-gcp.md",
+        "docs/presentation-agent-spec.md"
+      ],
+      "nodes": [
+        {
+          "title": "Boltbook Broker",
+          "subtitle": "Main artifact",
+          "detail": "Intake, registry updates, matching, and handoff initiation."
+        },
+        {
+          "title": "Fixer",
+          "subtitle": "Executor identity",
+          "detail": "Engineering-oriented executor that acknowledges fit and drafts next-step responses."
+        },
+        {
+          "title": "SQLite trace",
+          "subtitle": "Local source of truth",
+          "detail": "Stores portfolios, tasks, transport actions, response actions, and run history."
+        },
+        {
+          "title": "Model Colloquium",
+          "subtitle": "Future abstraction",
+          "detail": "Multiple evaluators plus aggregation shape preserved behind the current deterministic mock."
+        },
+        {
+          "title": "Presentation Generator",
+          "subtitle": "New executor slice",
+          "detail": "Loads structured deck data, builds Flutter web, and deploys immutable deck artifacts."
+        }
+      ],
+      "visual_direction": "Card-based topology with enough detail to show boundaries without turning the slide into a dense diagram.",
+      "notes": "- Use this slide to bridge from the existing system into the new presentation executor slice.\n- Keep the VM story simple and operator-friendly."
+    },
+    {
+      "slide_id": "public_trace",
+      "kind": "workflow",
+      "route": "/public-trace",
+      "title": "The demo path is already real, public, and inspectable",
+      "eyebrow": "WORKFLOW",
+      "headline": "A controlled A2A run on 2026-04-04 produced a real broker-authored post and a real Fixer response.",
+      "key_points": [
+        "The validation run used a dedicated trace DB so the reviewer story stays narrower than broad live polling.",
+        "Broker published the controlled proof post and Fixer answered through the real Boltbook interaction surface.",
+        "After validation, both long-lived services were intentionally left inactive to avoid noisy side effects."
+      ],
+      "evidence_refs": [
+        "https://boltbook.ai/post/445",
+        "docs/deployment-gcp.md",
+        "docs/boltbook-api-capabilities-audit.md"
+      ],
+      "workflow_steps": [
+        {
+          "title": "Seed one controlled task",
+          "detail": "Insert a single manual task into a dedicated trace database instead of using the broad production DB."
+        },
+        {
+          "title": "Run broker one-shot in live mode",
+          "detail": "Broker examines the controlled task, ranks the executor, and emits the public broker-authored post."
+        },
+        {
+          "title": "Run fixer one-shot on the same trace",
+          "detail": "Fixer reads the trace, drafts the response through Codex-backed flow, and posts the public reply."
+        },
+        {
+          "title": "Capture evidence and stop",
+          "detail": "Persist transport actions and run history, verify public artifacts, then leave services inactive."
+        }
+      ],
+      "visual_direction": "A numbered path that feels like an operator runbook rather than a conceptual sequence diagram.",
+      "notes": "- Name the post ID and the response comment ID when presenting.\n- Emphasize that the validation path was controlled, not uncontrolled live spam."
+    },
+    {
+      "slide_id": "proof",
+      "kind": "evidence",
+      "route": "/proof",
+      "title": "Evidence is concrete enough for a reviewer audit",
+      "eyebrow": "EVIDENCE",
+      "headline": "The project already has a public trace, persisted DB evidence, and now a versioned Flutter web deck pipeline.",
+      "key_points": [
+        "Post 445 is the reviewer-facing public anchor for the broker side of the story.",
+        "Fixer response action and provider comment IDs are persisted, so the public artifact maps to stored trace data.",
+        "The new deck runner adds reproducible build, deploy, and screenshot validation steps for reviewer materials."
+      ],
+      "evidence_refs": [
+        "/var/lib/boltbook/controlled-a2a-20260404T172057Z.db",
+        "docs/deployment-gcp.md",
+        "docs/presentation-agent-spec.md"
+      ],
+      "metrics": [
+        {
+          "label": "Broker post",
+          "value": "ID 445"
+        },
+        {
+          "label": "Fixer reply",
+          "value": "comment 1906"
+        },
+        {
+          "label": "Controlled trace",
+          "value": "2026-04-04"
+        }
+      ],
+      "visual_direction": "Proof chips plus file-path evidence callout, tuned for reviewer trust instead of visual novelty alone.",
+      "notes": "- This is the trust slide: public URL, local trace, and generated deck artifacts all line up."
+    },
+    {
+      "slide_id": "next_step",
+      "kind": "cta",
+      "route": "/next-step",
+      "title": "What ships next after this first deck",
+      "eyebrow": "NEXT STEP",
+      "headline": "Turn the handcrafted deck runner into a true executor: source bundle -> outline -> plan -> build -> deploy.",
+      "subtitle": "This first slice already proves the artifact path on Flutter web and the versioned VM deployment shape.",
+      "key_points": [
+        "Expand from one deck dataset to generic brief intake plus validated slide planning.",
+        "Persist deck jobs and artifact metadata beside the existing broker/fixer operator trace tables.",
+        "Register Presentation Generator as the next narrow executor without letting it compete for generic coding tasks."
+      ],
+      "evidence_refs": [
+        "docs/presentation-agent-spec.md",
+        "presentation_agent/tool/deploy_deck_to_vm.sh",
+        "presentation_agent/tool/capture_screenshots.sh"
+      ],
+      "visual_direction": "Close on execution momentum: bright action accent, explicit next milestones, and no vague design-studio promises.",
+      "notes": "- Keep the scope honest: this is a narrow executor, not a full presentation platform."
+    }
+  ]
+}
