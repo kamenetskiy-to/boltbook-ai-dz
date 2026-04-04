@@ -1,63 +1,67 @@
-# Implementation Plan
+# План реализации
 
-## Assignment scope
+## Канонический source of truth
 
-Ship one deployed agent on Boltbook that demonstrates a concrete use case:
+В работе над реализацией нужно использовать `docs/first-iteration-technical-spec.md` как каноническую инженерную спецификацию.
+Этот файл остается кратким продуктовым планом и сводкой по scope.
 
-- task intake;
-- candidate search;
-- candidate ranking;
-- contact initiation.
+## Объем задания
 
-The public interaction surface on Boltbook is the primary interface.
+Нужно выпустить одного задеплоенного агента в Boltbook, который демонстрирует конкретный сценарий использования:
 
-## MVP flow
+- intake задачи;
+- поиск кандидатов;
+- ранжирование кандидатов;
+- инициирование контакта.
 
-1. Receive a task description.
-2. Search Boltbook for relevant posts, authors, or profiles.
-3. Build a candidate list from public traces.
-4. Run a mocked colloquium over those candidates.
-5. Produce a shortlist with rationale.
-6. Publish a Boltbook action:
-   - either a post asking for the right executor;
-   - or a comment/DM aimed at a selected candidate.
+Публичная поверхность взаимодействия в Boltbook является основным интерфейсом.
 
-## Mocked colloquium
+## Поток MVP
 
-The colloquium abstraction should have two layers:
+1. Получить описание задачи.
+2. Найти в Boltbook релевантные посты, авторов или профили.
+3. Построить список кандидатов по публичным следам.
+4. Прогнать поверх кандидатов замоканный colloquium.
+5. Сформировать shortlist с объяснением.
+6. Выполнить действие в Boltbook:
+   - либо пост с запросом на подходящего исполнителя;
+   - либо комментарий/DM, адресованный выбранному кандидату.
 
-- interface;
-- current mock implementation.
+## Замоканный colloquium
 
-The mock can be simple and deterministic, but it should still preserve the architectural shape of:
+Абстракция colloquium должна иметь два слоя:
 
-- multiple evaluators;
-- aggregation step;
-- final recommendation.
+- интерфейс;
+- текущую mock implementation.
 
-## Expected deliverables
+Mock может быть простым и детерминированным, но он все равно должен сохранять архитектурную форму:
 
-- deployed Boltbook agent;
-- at least one Boltbook comment from that agent;
-- code with a clear colloquium abstraction;
-- README with architecture, trade-offs, run instructions, and vision.
+- несколько evaluators;
+- шаг агрегации;
+- финальную рекомендацию.
 
-## Trade-offs
+## Ожидаемые deliverables
 
-### What is deliberately simplified
+- задеплоенный Boltbook-агент;
+- как минимум один комментарий в Boltbook от этого агента;
+- код с явной абстракцией colloquium;
+- README с архитектурой, trade-off'ами, инструкцией по запуску и видением.
 
-- candidate profiles are inferred from weak public signals;
-- trust is heuristic, not formal;
-- task negotiation is minimal;
-- payment and contracting are out of scope.
+## Компромиссы
 
-### Why this is acceptable
+### Что намеренно упрощено
 
-The assignment asks for:
+- профили кандидатов выводятся из слабых публичных сигналов;
+- trust эвристический, а не формальный;
+- переговоры по задаче минимальны;
+- платежи и контракты вне scope.
 
-- one concrete scenario;
-- one chosen future technology with a mockable abstraction;
-- a strong vision of how the system evolves.
+### Почему это допустимо
 
-A narrow and honest wedge is stronger here than a fake full platform.
+В задании просят:
 
+- один конкретный сценарий;
+- одну выбранную будущую технологию с абстракцией, которую можно замокать;
+- сильный vision того, как система развивается дальше.
+
+Узкий и честный wedge здесь сильнее, чем фальшивая имитация полной платформы.

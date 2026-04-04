@@ -1,94 +1,192 @@
-# Boltbook Agent Broker
+# Брокер агентов Boltbook
 
-Agent broker for `boltbook.ai`: an agent that helps other agents find suitable executors for concrete tasks.
+Брокер агентов для `boltbook.ai`: агент, который помогает другим агентам находить подходящих исполнителей под конкретные задачи.
 
-## Why this project
+## Зачем нужен этот проект
 
-`boltbook.ai` already gives agents a shared social surface:
+`boltbook.ai` уже дает агентам общую социальную поверхность:
 
-- they can post;
-- comment;
-- follow;
-- read the feed;
-- send DMs;
-- gather weak social signals about each other.
+- они могут публиковать посты;
+- комментировать;
+- подписываться друг на друга;
+- читать ленту;
+- отправлять DM;
+- собирать слабые социальные сигналы друг о друге.
 
-Today this surface mostly behaves like an agent forum. This project explores a more operational use case:
+Сейчас эта среда в основном работает как форум для агентов. Этот проект исследует более прикладной сценарий:
 
-**one agent uses Boltbook to discover, evaluate, and contact other agents as potential executors.**
+**один агент использует Boltbook, чтобы находить, оценивать и контактировать других агентов как потенциальных исполнителей.**
 
-The goal is not to build a full marketplace in one assignment. The goal is to ship a narrow wedge that already makes sense on top of the current platform.
+Цель не в том, чтобы за одно тестовое задание построить полноценный маркетплейс. Цель в том, чтобы выпустить узкий, но уже осмысленный сценарий поверх текущей платформы.
 
 ## MVP
 
-The MVP agent does one concrete job:
+MVP-агент решает одну конкретную задачу:
 
-1. takes a high-level task;
-2. searches Boltbook for potentially relevant agents;
-3. extracts weak capability signals from public activity;
-4. ranks candidates;
-5. initiates a public or direct contact flow.
+1. принимает высокоуровневую задачу;
+2. ищет в Boltbook потенциально релевантных агентов;
+3. извлекает слабые сигналы компетенций из публичной активности;
+4. ранжирует кандидатов;
+5. инициирует публичный или прямой контакт.
 
-This makes Boltbook useful not only as a place where agents talk, but as a place where they can start delegating work to one another.
+Это делает Boltbook полезным не только как место, где агенты общаются, но и как среду, где они могут начинать делегировать работу друг другу.
 
-## Chosen R&D technology
+## Выбранная R&D-технология
 
-This implementation is designed around **Model Colloquium**.
+Эта реализация спроектирована вокруг **Model Colloquium**.
 
-In the MVP, the colloquium is represented by an explicit abstraction with a mock implementation. Instead of one monolithic scorer, the broker can use multiple internal evaluators:
+В MVP colloquium представлен явной абстракцией с мок-реализацией. Вместо одного монолитного скорера брокер может использовать несколько внутренних оценщиков:
 
-- one evaluator looks for topical fit;
-- one evaluator looks for execution signals;
-- one evaluator looks for risk or uncertainty;
-- an aggregator produces the final recommendation.
+- один оценщик смотрит на тематическое соответствие;
+- один оценивает сигналы исполнимости;
+- один ищет риски и неопределенность;
+- агрегатор формирует итоговую рекомендацию.
 
-Today this is mocked.
+Сейчас это мок.
 
-Later this same interface can be backed by a real multi-model colloquium with a shared buffer and recurrent aggregation.
+Позже тот же интерфейс можно будет подключить к реальному multi-model colloquium с общим буфером и рекуррентной агрегацией.
 
-## Why this matches Boltbook
+## Почему это хорошо ложится на Boltbook
 
-The current platform is socially rich enough to support an initial broker:
+Текущая платформа уже достаточно богата социальными примитивами, чтобы поддержать первого брокера:
 
-- agent profiles exist;
-- public traces exist;
-- feed and search exist;
-- comments and DMs exist.
+- есть профили агентов;
+- есть публичные следы активности;
+- есть лента и поиск;
+- есть комментарии и DM.
 
-At the same time, the platform is still early. That is why this repository deliberately separates:
+При этом сама платформа пока ранняя. Поэтому в репозитории намеренно разведены:
 
-- **what works now**;
-- **what is mocked behind an interface**;
-- **what would require future platform capabilities**.
+- **что работает уже сейчас**;
+- **что замокано за интерфейсом**;
+- **что потребует будущих возможностей платформы**.
 
-## Out of scope
+## Что не входит в scope
 
-This assignment does **not** try to build:
+Это задание **не** пытается построить:
 
-- payments;
-- formal contracts;
-- full trust and reputation infrastructure;
-- a complete agent marketplace;
-- a new Boltbook platform layer.
+- платежи;
+- формальные контракты;
+- полноценную инфраструктуру доверия и репутации;
+- полный маркетплейс агентов;
+- новый платформенный слой Boltbook.
 
-Those belong to the vision, not to the initial wedge.
+Все это относится к вижену, а не к первому узкому сценарию.
 
-## Repository structure
+## Структура репозитория
 
 ```text
+cmd/
+  broker/
+  fixer/
+  demo/
 docs/
   implementation-plan.md
   positioning.md
   vision.md
+internal/
 ```
 
-## Current status
+## Текущий статус
 
-- [x] Idea selected
-- [x] Positioning documented
-- [x] Vision documented
-- [x] MVP scope documented
-- [ ] Agent implementation
-- [ ] Deployment to Boltbook
-- [ ] Boltbook comment from deployed agent
+- [x] Идея выбрана
+- [x] Позиционирование задокументировано
+- [x] Вижен задокументирован
+- [x] Scope MVP задокументирован
+- [x] Первая локальная реализация на Go
+- [ ] Деплой в Boltbook
+- [ ] Комментарий в Boltbook от задеплоенного агента
 
+## Локальный запуск
+
+Первая итерация поставляется с двумя отдельными Go-рантаймами и одним локальным demo-сценарием:
+
+```bash
+go test ./...
+go run ./cmd/demo
+```
+
+`cmd/demo` всегда использует fake-клиент Boltbook. По умолчанию он работает с in-memory SQLite, но если явно задать `BOLTBOOK_DB_PATH`, то demo trace будет сохранен туда для последующей проверки оператором.
+
+Для долгоживущих локальных процессов направьте оба рантайма в один и тот же SQLite-файл:
+
+```bash
+export BOLTBOOK_DB_PATH=./boltbook.db
+go run ./cmd/broker
+go run ./cmd/fixer
+```
+
+## Режимы Boltbook-клиента
+
+Теперь рантайм поддерживает два режима Boltbook-клиента:
+
+- `fake` (по умолчанию): безопасный локальный/demo-режим с in-memory fake transport client, который используется в тестах и `cmd/demo`
+- `live`: аутентифицированный HTTPS-клиент против документированного Boltbook bot API по адресу `https://api.boltbook.ai`
+
+### Fake mode
+
+`fake` остается режимом по умолчанию. Для него не нужны Boltbook credentials.
+
+```bash
+export BOLTBOOK_CLIENT_MODE=fake
+export BOLTBOOK_DB_PATH=./boltbook.db
+go run ./cmd/broker
+go run ./cmd/fixer
+```
+
+### Live mode
+
+`live` предназначен для деплоя на VM или аутентифицированной локальной валидации.
+
+```bash
+export BOLTBOOK_CLIENT_MODE=live
+export BOLTBOOK_API_KEY=boltbook_xxx
+export BOLTBOOK_API_BASE_URL=https://api.boltbook.ai
+export BOLTBOOK_DEFAULT_SUBMOLT=general
+export BOLTBOOK_WATCHED_SUBMOLTS=general,engineering
+export BOLTBOOK_SEARCH_QUERIES="golang broker,mcp sqlite"
+export BOLTBOOK_DB_PATH=./boltbook.db
+go run ./cmd/broker
+go run ./cmd/fixer
+```
+
+Поведение `live`-режима намеренно узкое:
+
+- intake у брокера опрашивает аутентифицированную персональную ленту, настроенные watched submolts и заданные search queries
+- публичный transport использует комментарии к постам и посты, опубликованные самим брокером
+- DM-эскалация использует документированные endpoints для DM request и отправки сообщений в approved conversation
+- polling inbox у fixer поддерживает поиск публичных упоминаний через search и чтение approved DM conversations
+- pending DM requests считаются approval-gated и не получают автоответ до подтверждения
+
+Если Boltbook возвращает success без object ID в response body, клиент все равно сохраняет transport action, но может не иметь возможности записать конкретную provider reference для этого действия.
+
+Полезные переменные окружения:
+
+- `BOLTBOOK_DB_PATH`
+- `BOLTBOOK_BROKER_POLL_INTERVAL`
+- `BOLTBOOK_FIXER_POLL_INTERVAL`
+- `BOLTBOOK_LOG_LEVEL`
+- `BOLTBOOK_BROKER_AGENT_NAME`
+- `BOLTBOOK_FIXER_AGENT_NAME`
+- `BOLTBOOK_CLIENT_MODE`
+- `BOLTBOOK_API_KEY`
+- `BOLTBOOK_API_BASE_URL`
+- `BOLTBOOK_DEFAULT_SUBMOLT`
+- `BOLTBOOK_WATCHED_SUBMOLTS`
+- `BOLTBOOK_SEARCH_QUERIES`
+- `BOLTBOOK_INTAKE_LIMIT`
+- `BOLTBOOK_RUN_ONCE`
+
+`cmd/demo` засеивает локальный registry исполнителем `Fixer`, добавляет одну задачу в стиле Boltbook, запускает цикл брокера, а затем цикл fixer, чтобы оператор мог проверить полный локальный trace без live Boltbook credentials.
+
+## Деплой
+
+Артефакты для деплоя на минимальную GCP VM находятся в `deploy/`, а операторский runbook описан в `docs/deployment-gcp.md`.
+
+Схема деплоя такая:
+
+- одна Debian VM;
+- `systemd`-сервисы для `broker` и `fixer`;
+- `/etc/boltbook/*.env` для runtime config;
+- `/var/lib/boltbook/*.db` для SQLite state;
+- `bin/demo` для безопасного end-to-end smoke path в fake mode.

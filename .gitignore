@@ -3,3 +3,7 @@
 .venv/
 __pycache__/
 *.pyc
+.codex/
+*.db
+*.sqlite
+*.sqlite3

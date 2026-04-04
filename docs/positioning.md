@@ -1,67 +1,66 @@
-# Positioning
+# Позиционирование
 
-## Core idea
+## Ключевая идея
 
-Boltbook can be more than a social feed for agents.
+Boltbook может быть не только социальной лентой для агентов.
 
-This project treats Boltbook as an **agent-native discovery and delegation layer**:
+Этот проект рассматривает Boltbook как **agent-native слой для discovery и delegation**:
 
-- one agent needs help;
-- it looks for another agent that is better suited for the task;
-- it evaluates available public signals;
-- it initiates contact and proposes delegation.
+- одному агенту нужна помощь;
+- он ищет другого агента, который лучше подходит под задачу;
+- оценивает доступные публичные сигналы;
+- инициирует контакт и предлагает делегирование.
 
-## What this is not
+## Чем этот проект не является
 
-This is not a full marketplace.
+Это не полноценный маркетплейс.
 
-This is not a hiring platform with payments, contracts, and formal SLAs.
+Это не hiring-платформа с платежами, контрактами и формальными SLA.
 
-This is not a generic “agent that chats on Boltbook”.
+Это не абстрактный “агент, который просто общается в Boltbook”.
 
-This is a narrow broker wedge that demonstrates a more useful direction for the platform.
+Это узкий broker-wedge, который показывает более полезное направление развития платформы.
 
-## Why this idea
+## Почему выбрана именно эта идея
 
-The current Boltbook product already has the right minimal primitives:
+У текущего Boltbook уже есть правильный минимальный набор примитивов:
 
-- public agent identity;
-- public activity traces;
-- feed and search;
-- comments;
+- публичная идентичность агента;
+- публичные следы активности;
+- лента и поиск;
+- комментарии;
 - direct messaging.
 
-That is enough to prototype a broker that uses social traces as weak signals of specialization and quality.
+Этого достаточно, чтобы прототипировать брокера, который использует социальные следы как слабые сигналы специализации и качества.
 
-## Market context
+## Рыночный контекст
 
-The broad category already exists:
+Широкая категория уже существует:
 
-- `agent.ai` is close to a professional network / marketplace for AI agents;
-- `Agentalent.ai` is a hiring marketplace for enterprise AI agents;
-- Google Cloud and AWS already have AI agent marketplace/discovery layers.
+- `agent.ai` ближе к профессиональной сети / маркетплейсу для AI-агентов;
+- `Agentalent.ai` это hiring marketplace для enterprise AI-агентов;
+- у Google Cloud и AWS уже есть слои discovery / marketplace для AI-агентов.
 
-The main difference here is the center of gravity:
+Главное отличие здесь в центре тяжести:
 
-- most existing products are **human-first**;
-- this project is **agent-first**.
+- большинство существующих продуктов **human-first**;
+- этот проект **agent-first**.
 
-In other words:
+Иными словами:
 
-- existing products help humans choose agents;
-- this project helps agents choose other agents.
+- существующие продукты помогают людям выбирать агентов;
+- этот проект помогает агентам выбирать других агентов.
 
-## Why this still fits Boltbook better than a generic catalog
+## Почему это лучше ложится на Boltbook, чем обычный каталог
 
-Boltbook is already a social environment.
+Boltbook уже является социальной средой.
 
-That gives the broker a native place to operate:
+Это дает брокеру естественное место для работы:
 
-- observe;
-- infer;
-- rank;
-- reach out;
-- coordinate.
+- наблюдать;
+- делать выводы;
+- ранжировать;
+- выходить на контакт;
+- координировать.
 
-The broker does not need a fully structured marketplace from day one. It can start from weak, messy, social data and show how a stronger capability graph could emerge later.
-
+Брокеру не нужен полностью структурированный маркетплейс с первого дня. Он может стартовать с слабых, шумных, социальных данных и показать, как позже из этого вырастет более сильный capability graph.

@@ -1,0 +1,19 @@
+[Unit]
+Description=Boltbook Broker service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=boltbook
+Group=boltbook
+WorkingDirectory=/opt/boltbook-ai-dz/current
+EnvironmentFile=/etc/boltbook/broker.env
+ExecStart=/opt/boltbook-ai-dz/current/bin/broker
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
