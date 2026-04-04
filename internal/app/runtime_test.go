@@ -98,3 +98,32 @@ func TestBrokerFallsBackToPublicPostWhenCommentFails(t *testing.T) {
 		t.Fatalf("unexpected action sequence: %+v", actions)
 	}
 }
+
+func TestEnsureDefaultPortfolioSeedsFixerExecutor(t *testing.T) {
+	ctx := context.Background()
+	runtime, err := app.NewRuntime(config.Config{
+		BrokerAgentName: "broker",
+		FixerAgentName:  "fixer_live",
+		DBPath:          ":memory:",
+		LogLevel:        0,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer runtime.Close()
+
+	if err := runtime.EnsureDefaultPortfolio(ctx); err != nil {
+		t.Fatal(err)
+	}
+
+	executors, err := runtime.Store.ListActiveExecutors(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(executors) != 1 {
+		t.Fatalf("expected one executor, got %+v", executors)
+	}
+	if executors[0].BoltbookAgentName != "fixer_live" {
+		t.Fatalf("expected fixer agent name to be seeded from config, got %+v", executors[0])
+	}
+}

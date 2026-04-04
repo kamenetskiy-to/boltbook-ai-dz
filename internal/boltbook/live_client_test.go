@@ -88,7 +88,12 @@ func TestHTTPClientPollBrokerIntakeDedupesSources(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client, err := NewHTTPClient(server.URL, "test-key", "general", []string{"engineering"}, []string{"fixer"}, 20)
+	client, err := NewHTTPClient(server.URL, "test-key", "general", []string{"engineering"}, []string{"fixer"}, 20, LiveClientOptions{
+		BrokerIntakeFromFeed:     true,
+		BrokerIntakeFromSubmolts: true,
+		BrokerIntakeFromSearch:   true,
+		FixerInboxFromDMs:        true,
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -116,6 +121,55 @@ func TestHTTPClientPollBrokerIntakeDedupesSources(t *testing.T) {
 		if header != "Bearer test-key" {
 			t.Fatalf("expected bearer auth header, got %q", header)
 		}
+	}
+}
+
+func TestHTTPClientPollBrokerIntakeIgnoresMissingSubmolt(t *testing.T) {
+	t.Parallel()
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		switch {
+		case r.URL.Path == "/api/v1/feed":
+			_ = json.NewEncoder(w).Encode(map[string]any{
+				"posts": []map[string]any{
+					{
+						"id":         "post-1",
+						"title":      "Need Go help",
+						"content":    "Looking for an executor",
+						"created_at": "2026-04-04T10:00:00Z",
+						"author":     map[string]any{"name": "requester"},
+						"submolt":    map[string]any{"name": "general"},
+					},
+				},
+			})
+		case r.URL.Path == "/api/v1/submolts/engineering/feed":
+			w.WriteHeader(http.StatusBadRequest)
+			_, _ = w.Write([]byte(`{"detail":"Submolt not found"}`))
+		case r.URL.Path == "/api/v1/search":
+			_ = json.NewEncoder(w).Encode(map[string]any{"results": []map[string]any{}})
+		default:
+			t.Fatalf("unexpected path: %s", r.URL.Path)
+		}
+	}))
+	defer server.Close()
+
+	client, err := NewHTTPClient(server.URL, "test-key", "general", []string{"engineering"}, []string{"fixer"}, 20, LiveClientOptions{
+		BrokerIntakeFromFeed:     true,
+		BrokerIntakeFromSubmolts: true,
+		BrokerIntakeFromSearch:   true,
+		FixerInboxFromDMs:        true,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tasks, err := client.PollBrokerIntake(context.Background(), "broker")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(tasks) != 1 {
+		t.Fatalf("expected feed task to survive missing submolt, got %+v", tasks)
 	}
 }
 
@@ -221,7 +275,12 @@ func TestHTTPClientTransportAndFixerInbox(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client, err := NewHTTPClient(server.URL, "live-key", "general", nil, nil, 20)
+	client, err := NewHTTPClient(server.URL, "live-key", "general", nil, nil, 20, LiveClientOptions{
+		BrokerIntakeFromFeed:     true,
+		BrokerIntakeFromSubmolts: true,
+		BrokerIntakeFromSearch:   true,
+		FixerInboxFromDMs:        true,
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -313,5 +372,77 @@ func TestHTTPClientTransportAndFixerInbox(t *testing.T) {
 	}
 	if len(dmSendBodies) != 2 || dmSendBodies[0] != "dm body" || dmSendBodies[1] != "dm ack" {
 		t.Fatalf("unexpected dm send bodies: %+v", dmSendBodies)
+	}
+}
+
+func TestHTTPClientSupportsTargetedValidationScopes(t *testing.T) {
+	t.Parallel()
+
+	var searchQueries []string
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		switch {
+		case r.URL.Path == "/api/v1/search":
+			searchQueries = append(searchQueries, r.URL.Query().Get("q"))
+			_ = json.NewEncoder(w).Encode(map[string]any{
+				"results": []map[string]any{
+					{
+						"id":         "post-target",
+						"type":       "post",
+						"title":      "trace token boltbook-a2a-20260404",
+						"content":    "Need Fixer help on Go runtime validation",
+						"post_id":    "post-target",
+						"created_at": "2026-04-04T10:00:00Z",
+						"author":     map[string]any{"name": "fixer"},
+					},
+					{
+						"id":      "comment-target",
+						"type":    "comment",
+						"content": "fixer boltbook-a2a-20260404 please respond",
+						"post_id": "post-target",
+						"author":  map[string]any{"name": "broker"},
+						"post":    map[string]any{"id": "post-target", "title": "trace token boltbook-a2a-20260404"},
+					},
+				},
+			})
+		default:
+			t.Fatalf("unexpected request: %s %s", r.Method, r.URL.Path)
+		}
+	}))
+	defer server.Close()
+
+	client, err := NewHTTPClient(server.URL, "live-key", "general", []string{"engineering"}, []string{"ignored-broker-search"}, 20, LiveClientOptions{
+		BrokerIntakeFromFeed:     false,
+		BrokerIntakeFromSubmolts: false,
+		BrokerIntakeFromSearch:   true,
+		FixerSearchQueries:       []string{"boltbook-a2a-20260404"},
+		FixerInboxFromDMs:        false,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tasks, err := client.PollBrokerIntake(context.Background(), "broker")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(tasks) != 1 {
+		t.Fatalf("expected targeted broker search results, got %+v", tasks)
+	}
+
+	leads, err := client.PollFixerInbox(context.Background(), "fixer")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(leads) != 1 {
+		t.Fatalf("expected only one targeted public lead, got %+v", leads)
+	}
+	if leads[0].SourceMode != domain.TransportModePublicComment {
+		t.Fatalf("expected public comment lead, got %+v", leads[0])
+	}
+
+	if len(searchQueries) != 2 || searchQueries[0] != "ignored-broker-search" || searchQueries[1] != "boltbook-a2a-20260404" {
+		t.Fatalf("unexpected search queries: %+v", searchQueries)
 	}
 }

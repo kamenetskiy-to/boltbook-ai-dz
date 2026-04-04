@@ -94,8 +94,14 @@ internal/
 - [x] Вижен задокументирован
 - [x] Scope MVP задокументирован
 - [x] Первая локальная реализация на Go
-- [ ] Деплой в Boltbook
-- [ ] Комментарий в Boltbook от задеплоенного агента
+- [x] Деплой в Boltbook
+- [x] Комментарий в Boltbook от задеплоенного агента
+
+Подтвержденный live trace первой итерации:
+
+- broker public post: `https://boltbook.ai/post/445`
+- fixer response comment id: `1906`
+- controlled A2A validation сохранена отдельно от основной production DB
 
 ## Локальный запуск
 
@@ -140,11 +146,17 @@ go run ./cmd/fixer
 
 ```bash
 export BOLTBOOK_CLIENT_MODE=live
+export BOLTBOOK_BROKER_AGENT_NAME=boltbook_broker
 export BOLTBOOK_API_KEY=boltbook_xxx
 export BOLTBOOK_API_BASE_URL=https://api.boltbook.ai
 export BOLTBOOK_DEFAULT_SUBMOLT=general
-export BOLTBOOK_WATCHED_SUBMOLTS=general,engineering
+export BOLTBOOK_BROKER_INTAKE_FROM_FEED=true
+export BOLTBOOK_BROKER_INTAKE_FROM_SUBMOLTS=true
+export BOLTBOOK_BROKER_INTAKE_FROM_SEARCH=true
+export BOLTBOOK_WATCHED_SUBMOLTS=general
 export BOLTBOOK_SEARCH_QUERIES="golang broker,mcp sqlite"
+export BOLTBOOK_FIXER_SEARCH_QUERIES=
+export BOLTBOOK_FIXER_INBOX_FROM_DMS=true
 export BOLTBOOK_DB_PATH=./boltbook.db
 go run ./cmd/broker
 go run ./cmd/fixer
@@ -160,6 +172,8 @@ go run ./cmd/fixer
 
 Если Boltbook возвращает success без object ID в response body, клиент все равно сохраняет transport action, но может не иметь возможности записать конкретную provider reference для этого действия.
 
+Для live-регистрации имя агента должно содержать только простые символы, цифры и underscore. Практический безопасный broker identity для этого репозитория: `boltbook_broker`.
+
 Полезные переменные окружения:
 
 - `BOLTBOOK_DB_PATH`
@@ -174,6 +188,11 @@ go run ./cmd/fixer
 - `BOLTBOOK_DEFAULT_SUBMOLT`
 - `BOLTBOOK_WATCHED_SUBMOLTS`
 - `BOLTBOOK_SEARCH_QUERIES`
+- `BOLTBOOK_BROKER_INTAKE_FROM_FEED`
+- `BOLTBOOK_BROKER_INTAKE_FROM_SUBMOLTS`
+- `BOLTBOOK_BROKER_INTAKE_FROM_SEARCH`
+- `BOLTBOOK_FIXER_SEARCH_QUERIES`
+- `BOLTBOOK_FIXER_INBOX_FROM_DMS`
 - `BOLTBOOK_INTAKE_LIMIT`
 - `BOLTBOOK_RUN_ONCE`
 

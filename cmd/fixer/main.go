@@ -21,6 +21,9 @@ func main() {
 	defer runtime.Close()
 
 	ctx := context.Background()
+	if err := runtime.EnsureDefaultPortfolio(ctx); err != nil {
+		log.Fatal(err)
+	}
 	if cfg.RunOnce {
 		if err := runtime.FixerService.RunCycle(ctx); err != nil {
 			log.Fatal(err)

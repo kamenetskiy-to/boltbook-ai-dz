@@ -18,13 +18,14 @@ trap 'rm -rf "${BUILD_DIR}"' EXIT
 
 export PATH="/usr/local/go/bin:${PATH}"
 
-install -d -o boltbook -g boltbook "${RELEASE_DIR}/bin"
 rsync -a --delete \
   --exclude '.git' \
   --exclude '.codex' \
   --exclude 'boltbook.db' \
   --exclude '.DS_Store' \
   "${REPO_DIR}/" "${RELEASE_DIR}/"
+
+install -d -o boltbook -g boltbook "${RELEASE_DIR}/bin"
 
 pushd "${RELEASE_DIR}" >/dev/null
 /usr/local/go/bin/go build -o "${BUILD_DIR}/broker" ./cmd/broker

@@ -17,6 +17,16 @@ type Config struct {
 	BoltbookAPIBaseURL  string
 	BoltbookSubmolt     string
 	BoltbookIntakeLimit int
+	BrokerIntakeFromFeed     bool
+	BrokerIntakeFromSubmolts bool
+	BrokerIntakeFromSearch   bool
+	FixerSearchQueries       []string
+	FixerInboxFromDMs        bool
+	FixerCodexEnabled   bool
+	CodexCLIPath        string
+	CodexHome           string
+	CodexModel          string
+	CodexTimeout        time.Duration
 	DBPath              string
 	BrokerPollInterval  time.Duration
 	FixerPollInterval   time.Duration
@@ -29,12 +39,21 @@ type Config struct {
 
 func Load() (Config, error) {
 	cfg := Config{
-		BrokerAgentName:    envOr("BOLTBOOK_BROKER_AGENT_NAME", "boltbook-broker"),
+		BrokerAgentName:    envOr("BOLTBOOK_BROKER_AGENT_NAME", "boltbook_broker"),
 		FixerAgentName:     envOr("BOLTBOOK_FIXER_AGENT_NAME", "fixer"),
 		BoltbookClientMode: envOr("BOLTBOOK_CLIENT_MODE", "fake"),
 		BoltbookAPIKey:     strings.TrimSpace(os.Getenv("BOLTBOOK_API_KEY")),
 		BoltbookAPIBaseURL: envOr("BOLTBOOK_API_BASE_URL", "https://api.boltbook.ai"),
 		BoltbookSubmolt:    envOr("BOLTBOOK_DEFAULT_SUBMOLT", "general"),
+		BrokerIntakeFromFeed:     envBoolOr("BOLTBOOK_BROKER_INTAKE_FROM_FEED", true),
+		BrokerIntakeFromSubmolts: envBoolOr("BOLTBOOK_BROKER_INTAKE_FROM_SUBMOLTS", true),
+		BrokerIntakeFromSearch:   envBoolOr("BOLTBOOK_BROKER_INTAKE_FROM_SEARCH", true),
+		FixerSearchQueries:       splitCSV(os.Getenv("BOLTBOOK_FIXER_SEARCH_QUERIES")),
+		FixerInboxFromDMs:        envBoolOr("BOLTBOOK_FIXER_INBOX_FROM_DMS", true),
+		FixerCodexEnabled:  parseBool(os.Getenv("BOLTBOOK_FIXER_CODEX_ENABLED")),
+		CodexCLIPath:       envOr("BOLTBOOK_CODEX_CLI_PATH", "codex"),
+		CodexHome:          strings.TrimSpace(os.Getenv("BOLTBOOK_CODEX_HOME")),
+		CodexModel:         envOr("BOLTBOOK_CODEX_MODEL", "gpt-5.3-codex-spark"),
 		DBPath:             envOr("BOLTBOOK_DB_PATH", "boltbook.db"),
 		WatchedSubmolts:    splitCSV(os.Getenv("BOLTBOOK_WATCHED_SUBMOLTS")),
 		SearchQueries:      splitCSV(os.Getenv("BOLTBOOK_SEARCH_QUERIES")),
@@ -47,6 +66,9 @@ func Load() (Config, error) {
 		return Config{}, err
 	}
 	if cfg.FixerPollInterval, err = parseDurationEnv("BOLTBOOK_FIXER_POLL_INTERVAL", 45*time.Second); err != nil {
+		return Config{}, err
+	}
+	if cfg.CodexTimeout, err = parseDurationEnv("BOLTBOOK_CODEX_TIMEOUT", 45*time.Second); err != nil {
 		return Config{}, err
 	}
 	if cfg.LogLevel, err = parseLogLevel(envOr("BOLTBOOK_LOG_LEVEL", "info")); err != nil {
@@ -83,6 +105,14 @@ func splitCSV(raw string) []string {
 func parseBool(raw string) bool {
 	ok, _ := strconv.ParseBool(strings.TrimSpace(raw))
 	return ok
+}
+
+func envBoolOr(key string, fallback bool) bool {
+	raw := strings.TrimSpace(os.Getenv(key))
+	if raw == "" {
+		return fallback
+	}
+	return parseBool(raw)
 }
 
 func parseDurationEnv(key string, fallback time.Duration) (time.Duration, error) {

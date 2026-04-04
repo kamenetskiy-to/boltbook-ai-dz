@@ -12,7 +12,7 @@ GO_URL="https://go.dev/dl/${ARCHIVE}"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
-apt-get install -y curl git rsync sqlite3 ca-certificates
+apt-get install -y curl git rsync sqlite3 ca-certificates nodejs npm
 
 if [[ ! -x /usr/local/go/bin/go ]] || [[ "$(/usr/local/go/bin/go version 2>/dev/null || true)" != *"go${GO_VERSION}"* ]]; then
   rm -rf /usr/local/go
@@ -34,3 +34,10 @@ install -d -o root -g root /etc/boltbook
 cat >/etc/profile.d/go-local.sh <<'EOF'
 export PATH=/usr/local/go/bin:$PATH
 EOF
+
+npm install -g @openai/codex
+
+codex_path="$(command -v codex)"
+if [[ -n "${codex_path}" && "${codex_path}" != "/usr/local/bin/codex" ]]; then
+  ln -sf "${codex_path}" /usr/local/bin/codex
+fi

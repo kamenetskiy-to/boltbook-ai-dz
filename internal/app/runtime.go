@@ -9,6 +9,7 @@ import (
 
 	"boltbook-ai-dz/internal/boltbook"
 	"boltbook-ai-dz/internal/broker"
+	"boltbook-ai-dz/internal/codexcli"
 	"boltbook-ai-dz/internal/config"
 	"boltbook-ai-dz/internal/core"
 	"boltbook-ai-dz/internal/domain"
@@ -37,6 +38,17 @@ func NewRuntime(cfg config.Config) (*Runtime, error) {
 		_ = store.Close()
 		return nil, err
 	}
+	fixerService := fixer.NewService(store, client, logger, cfg.FixerAgentName)
+	if cfg.FixerCodexEnabled {
+		fixerService.WithResponseDrafter(codexResponseDrafter{
+			client: codexcli.Client{
+				CommandPath: cfg.CodexCLIPath,
+				HomeDir:     cfg.CodexHome,
+				Model:       cfg.CodexModel,
+				Timeout:     cfg.CodexTimeout,
+			},
+		})
+	}
 
 	return &Runtime{
 		Config:        cfg,
@@ -44,7 +56,7 @@ func NewRuntime(cfg config.Config) (*Runtime, error) {
 		Client:        client,
 		FakeClient:    fakeClient,
 		BrokerService: broker.NewService(store, client, logger, cfg.BrokerAgentName),
-		FixerService:  fixer.NewService(store, client, logger, cfg.FixerAgentName),
+		FixerService:  fixerService,
 	}, nil
 }
 
@@ -52,10 +64,7 @@ func (r *Runtime) Close() error {
 	return r.Store.Close()
 }
 
-func (r *Runtime) SeedDemoData(ctx context.Context) error {
-	if r.FakeClient == nil {
-		return fmt.Errorf("demo seed requires fake Boltbook client mode")
-	}
+func (r *Runtime) EnsureDefaultPortfolio(ctx context.Context) error {
 	portfolio := domain.ExecutorPortfolio{
 		ExecutorID:        "fixer",
 		BoltbookAgentName: r.Config.FixerAgentName,
@@ -72,7 +81,7 @@ func (r *Runtime) SeedDemoData(ctx context.Context) error {
 		PortfolioEvidence: []domain.PortfolioEvidence{
 			{
 				Kind:      "profile",
-				SourceURL: "https://boltbook.ai/u/fixer",
+				SourceURL: "https://boltbook.ai/u/" + r.Config.FixerAgentName,
 				Excerpt:   "Multi-agent coding orchestration.",
 			},
 		},
@@ -83,7 +92,14 @@ func (r *Runtime) SeedDemoData(ctx context.Context) error {
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	}
-	if err := r.BrokerService.AddPortfolio(ctx, portfolio); err != nil {
+	return r.BrokerService.AddPortfolio(ctx, portfolio)
+}
+
+func (r *Runtime) SeedDemoData(ctx context.Context) error {
+	if r.FakeClient == nil {
+		return fmt.Errorf("demo seed requires fake Boltbook client mode")
+	}
+	if err := r.EnsureDefaultPortfolio(ctx); err != nil {
 		return err
 	}
 
@@ -116,6 +132,13 @@ func newClient(cfg config.Config) (boltbook.Client, *boltbook.FakeClient, error)
 			cfg.WatchedSubmolts,
 			cfg.SearchQueries,
 			cfg.BoltbookIntakeLimit,
+			boltbook.LiveClientOptions{
+				BrokerIntakeFromFeed:     cfg.BrokerIntakeFromFeed,
+				BrokerIntakeFromSubmolts: cfg.BrokerIntakeFromSubmolts,
+				BrokerIntakeFromSearch:   cfg.BrokerIntakeFromSearch,
+				FixerSearchQueries:       cfg.FixerSearchQueries,
+				FixerInboxFromDMs:        cfg.FixerInboxFromDMs,
+			},
 		)
 		if err != nil {
 			return nil, nil, err
@@ -124,4 +147,19 @@ func newClient(cfg config.Config) (boltbook.Client, *boltbook.FakeClient, error)
 	default:
 		return nil, nil, fmt.Errorf("unsupported BOLTBOOK_CLIENT_MODE %q", cfg.BoltbookClientMode)
 	}
+}
+
+type codexResponseDrafter struct {
+	client codexcli.Client
+}
+
+func (d codexResponseDrafter) DraftFixerResponse(ctx context.Context, lead domain.InboundLead, fallbackDecision domain.ResponseDecision, fallbackMessage string) (fixer.ResponseDraft, error) {
+	draft, err := d.client.DraftFixerResponse(ctx, lead, fallbackDecision, fallbackMessage)
+	if err != nil {
+		return fixer.ResponseDraft{}, err
+	}
+	return fixer.ResponseDraft{
+		Decision: draft.Decision,
+		Message:  draft.Message,
+	}, nil
 }

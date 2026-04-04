@@ -21,6 +21,17 @@ import (
 
 const defaultIntakeLimit = 20
 
+type APIError struct {
+	Method string
+	Path   string
+	Status int
+	Body   string
+}
+
+func (e *APIError) Error() string {
+	return fmt.Sprintf("boltbook API %s %s returned %d: %s", e.Method, e.Path, e.Status, strings.TrimSpace(e.Body))
+}
+
 type HTTPClient struct {
 	baseURL         string
 	siteURL         string
@@ -30,13 +41,26 @@ type HTTPClient struct {
 	searchQueries   []string
 	intakeLimit     int
 	httpClient      *http.Client
+	brokerIntakeFromFeed     bool
+	brokerIntakeFromSubmolts bool
+	brokerIntakeFromSearch   bool
+	fixerSearchQueries       []string
+	fixerInboxFromDMs        bool
 
 	mu        sync.Mutex
 	seenTasks map[string]struct{}
 	seenLeads map[string]struct{}
 }
 
-func NewHTTPClient(baseURL, apiKey, defaultSubmolt string, watchedSubmolts, searchQueries []string, intakeLimit int) (*HTTPClient, error) {
+type LiveClientOptions struct {
+	BrokerIntakeFromFeed     bool
+	BrokerIntakeFromSubmolts bool
+	BrokerIntakeFromSearch   bool
+	FixerSearchQueries       []string
+	FixerInboxFromDMs        bool
+}
+
+func NewHTTPClient(baseURL, apiKey, defaultSubmolt string, watchedSubmolts, searchQueries []string, intakeLimit int, options LiveClientOptions) (*HTTPClient, error) {
 	baseURL = strings.TrimRight(strings.TrimSpace(baseURL), "/")
 	if baseURL == "" {
 		return nil, errors.New("boltbook API base URL is required")
@@ -50,6 +74,7 @@ func NewHTTPClient(baseURL, apiKey, defaultSubmolt string, watchedSubmolts, sear
 	if strings.TrimSpace(defaultSubmolt) == "" {
 		defaultSubmolt = "general"
 	}
+	options = normalizeLiveClientOptions(options)
 	return &HTTPClient{
 		baseURL:         baseURL,
 		siteURL:         deriveSiteURL(baseURL),
@@ -58,6 +83,11 @@ func NewHTTPClient(baseURL, apiKey, defaultSubmolt string, watchedSubmolts, sear
 		watchedSubmolts: append([]string(nil), watchedSubmolts...),
 		searchQueries:   append([]string(nil), searchQueries...),
 		intakeLimit:     intakeLimit,
+		brokerIntakeFromFeed:     options.BrokerIntakeFromFeed,
+		brokerIntakeFromSubmolts: options.BrokerIntakeFromSubmolts,
+		brokerIntakeFromSearch:   options.BrokerIntakeFromSearch,
+		fixerSearchQueries:       append([]string(nil), options.FixerSearchQueries...),
+		fixerInboxFromDMs:        options.FixerInboxFromDMs,
 		httpClient: &http.Client{
 			Timeout: 15 * time.Second,
 		},
@@ -69,19 +99,8 @@ func NewHTTPClient(baseURL, apiKey, defaultSubmolt string, watchedSubmolts, sear
 func (c *HTTPClient) PollBrokerIntake(ctx context.Context, brokerAgent string) ([]domain.Task, error) {
 	var discovered []domain.Task
 
-	feed, err := c.getFeed(ctx)
-	if err != nil {
-		return nil, err
-	}
-	for _, post := range feed.Posts {
-		task, ok := c.taskFromPost(post, brokerAgent)
-		if ok {
-			discovered = append(discovered, task)
-		}
-	}
-
-	for _, submolt := range c.watchedSubmolts {
-		feed, err := c.getSubmoltFeed(ctx, submolt)
+	if c.brokerIntakeFromFeed {
+		feed, err := c.getFeed(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -93,18 +112,38 @@ func (c *HTTPClient) PollBrokerIntake(ctx context.Context, brokerAgent string) (
 		}
 	}
 
-	for _, query := range c.searchQueries {
-		if strings.TrimSpace(query) == "" {
-			continue
+	if c.brokerIntakeFromSubmolts {
+		for _, submolt := range c.watchedSubmolts {
+			feed, err := c.getSubmoltFeed(ctx, submolt)
+			if err != nil {
+				if isIgnorableSubmoltError(err) {
+					continue
+				}
+				return nil, err
+			}
+			for _, post := range feed.Posts {
+				task, ok := c.taskFromPost(post, brokerAgent)
+				if ok {
+					discovered = append(discovered, task)
+				}
+			}
 		}
-		results, err := c.search(ctx, query)
-		if err != nil {
-			return nil, err
-		}
-		for _, result := range results.Results {
-			task, ok := c.taskFromSearchResult(result, brokerAgent)
-			if ok {
-				discovered = append(discovered, task)
+	}
+
+	if c.brokerIntakeFromSearch {
+		for _, query := range c.searchQueries {
+			if strings.TrimSpace(query) == "" {
+				continue
+			}
+			results, err := c.search(ctx, query)
+			if err != nil {
+				return nil, err
+			}
+			for _, result := range results.Results {
+				task, ok := c.taskFromSearchResult(result, brokerAgent)
+				if ok {
+					discovered = append(discovered, task)
+				}
 			}
 		}
 	}
@@ -115,33 +154,44 @@ func (c *HTTPClient) PollBrokerIntake(ctx context.Context, brokerAgent string) (
 func (c *HTTPClient) PollFixerInbox(ctx context.Context, fixerAgent string) ([]domain.InboundLead, error) {
 	var leads []domain.InboundLead
 
-	results, err := c.search(ctx, fixerAgent)
-	if err != nil {
-		return nil, err
+	queries := c.fixerSearchQueries
+	if len(queries) == 0 {
+		queries = []string{fixerAgent}
 	}
-	for _, result := range results.Results {
-		lead, ok := c.leadFromSearchResult(result, fixerAgent)
-		if ok {
-			leads = append(leads, lead)
-		}
-	}
-
-	conversations, err := c.getDMConversations(ctx)
-	if err != nil {
-		return nil, err
-	}
-	for _, conversation := range conversations.Conversations.Items {
-		if conversation.Status != "approved" {
+	for _, query := range queries {
+		if strings.TrimSpace(query) == "" {
 			continue
 		}
-		resp, err := c.getDMConversation(ctx, conversation.ConversationID)
+		results, err := c.search(ctx, query)
 		if err != nil {
 			return nil, err
 		}
-		for _, message := range resp.Messages {
-			lead, ok := c.leadFromDMMessage(message, conversation, fixerAgent)
+		for _, result := range results.Results {
+			lead, ok := c.leadFromSearchResult(result, fixerAgent)
 			if ok {
 				leads = append(leads, lead)
+			}
+		}
+	}
+
+	if c.fixerInboxFromDMs {
+		conversations, err := c.getDMConversations(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, conversation := range conversations.Conversations.Items {
+			if conversation.Status != "approved" {
+				continue
+			}
+			resp, err := c.getDMConversation(ctx, conversation.ConversationID)
+			if err != nil {
+				return nil, err
+			}
+			for _, message := range resp.Messages {
+				lead, ok := c.leadFromDMMessage(message, conversation, fixerAgent)
+				if ok {
+					leads = append(leads, lead)
+				}
 			}
 		}
 	}
@@ -462,6 +512,20 @@ func (c *HTTPClient) postURL(postID string) string {
 	return strings.TrimRight(c.siteURL, "/") + "/post/" + postID
 }
 
+func normalizeLiveClientOptions(options LiveClientOptions) LiveClientOptions {
+	if !options.BrokerIntakeFromFeed &&
+		!options.BrokerIntakeFromSubmolts &&
+		!options.BrokerIntakeFromSearch &&
+		!options.FixerInboxFromDMs &&
+		len(options.FixerSearchQueries) == 0 {
+		options.BrokerIntakeFromFeed = true
+		options.BrokerIntakeFromSubmolts = true
+		options.BrokerIntakeFromSearch = true
+		options.FixerInboxFromDMs = true
+	}
+	return options
+}
+
 func (c *HTTPClient) doJSON(ctx context.Context, method, rawPath string, query url.Values, payload any, out any) (int, error) {
 	endpoint, err := url.Parse(c.baseURL)
 	if err != nil {
@@ -502,7 +566,12 @@ func (c *HTTPClient) doJSON(ctx context.Context, method, rawPath string, query u
 		return resp.StatusCode, err
 	}
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return resp.StatusCode, fmt.Errorf("boltbook API %s %s returned %d: %s", method, rawPath, resp.StatusCode, strings.TrimSpace(string(data)))
+		return resp.StatusCode, &APIError{
+			Method: method,
+			Path:   rawPath,
+			Status: resp.StatusCode,
+			Body:   string(data),
+		}
 	}
 	if out != nil && len(bytes.TrimSpace(data)) > 0 {
 		if err := json.Unmarshal(data, out); err != nil {
@@ -510,6 +579,16 @@ func (c *HTTPClient) doJSON(ctx context.Context, method, rawPath string, query u
 		}
 	}
 	return resp.StatusCode, nil
+}
+
+func isIgnorableSubmoltError(err error) bool {
+	var apiErr *APIError
+	if !errors.As(err, &apiErr) {
+		return false
+	}
+	return apiErr.Status == http.StatusBadRequest &&
+		strings.Contains(apiErr.Path, "/api/v1/submolts/") &&
+		strings.Contains(strings.ToLower(apiErr.Body), "submolt not found")
 }
 
 func deriveSiteURL(apiBase string) string {

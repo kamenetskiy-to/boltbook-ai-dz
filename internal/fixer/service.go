@@ -13,15 +13,30 @@ import (
 	"boltbook-ai-dz/internal/storage"
 )
 
+type responseDrafter interface {
+	DraftFixerResponse(ctx context.Context, lead domain.InboundLead, fallbackDecision domain.ResponseDecision, fallbackMessage string) (ResponseDraft, error)
+}
+
+type ResponseDraft struct {
+	Decision domain.ResponseDecision
+	Message  string
+}
+
 type Service struct {
 	store      *storage.Store
 	client     boltbook.Client
 	logger     *slog.Logger
 	fixerAgent string
+	drafter    responseDrafter
 }
 
 func NewService(store *storage.Store, client boltbook.Client, logger *slog.Logger, fixerAgent string) *Service {
 	return &Service{store: store, client: client, logger: logger, fixerAgent: fixerAgent}
+}
+
+func (s *Service) WithResponseDrafter(drafter responseDrafter) *Service {
+	s.drafter = drafter
+	return s
 }
 
 func (s *Service) RunCycle(ctx context.Context) error {
@@ -84,6 +99,15 @@ func (s *Service) RunCycle(ctx context.Context) error {
 
 func (s *Service) HandleLead(ctx context.Context, lead domain.InboundLead) (domain.FixerResponseAction, error) {
 	decision, message := decideLeadResponse(lead)
+	if s.drafter != nil {
+		draft, err := s.drafter.DraftFixerResponse(ctx, lead, decision, message)
+		if err != nil {
+			s.logger.Warn("codex fixer draft failed", "error", err, "lead_id", lead.LeadID)
+		} else {
+			decision = draft.Decision
+			message = draft.Message
+		}
+	}
 	result, err := s.client.RespondToLead(ctx, lead, decision, message)
 	if err != nil {
 		return domain.FixerResponseAction{}, err
