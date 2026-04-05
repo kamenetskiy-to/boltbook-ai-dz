@@ -6,13 +6,16 @@
 
 В репозитории добавлен отдельный Flutter subtree `presentation_agent/`, который выполняет первый узкий срез `Presentation Generator`:
 
-- загружает deck из `assets/decks/<deck_id>/presentation_plan.json`;
-- валидирует `target_audience`, `output_language` и `audience_signals` до сборки;
-- мапит structured slide kinds в `flutter_deck`;
+- читает generation request из `assets/decks/<deck_id>/request.json`;
+- собирает локальный `sources.json`;
+- строит отдельный `scene_plan.json` до написания финальной копии;
+- генерирует итоговый `presentation_plan.json` после сценического планирования;
+- валидирует `target_audience`, `output_language`, `audience_signals` и бюджеты вместимости каждого кадра до сборки;
+- мапит structured slide kinds в scene-aware Flutter layouts;
 - собирает reviewer-facing web deck про текущий Boltbook Broker проект;
-- готовит versioned static artifact;
+- готовит canonical static artifact;
 - снимает smoke screenshots через headless Chrome;
-- публикует deck на текущую GCP VM как `/var/www/boltbook/decks/<deck_id>/`.
+- публикует deck на текущую GCP VM так, чтобы публичный входной адрес был только `/deck`.
 
 ## Поддерживаемые slide kinds
 
@@ -42,6 +45,8 @@ presentation_agent/build/decks/<deck_id>/site/
 Там лежат:
 
 - `index.html` и Flutter web bundle;
+- `request.json`;
+- `scene_plan.json`;
 - `presentation_plan.json`;
 - `manifest.json`;
 - `sources.json`;
@@ -64,13 +69,16 @@ tool/deploy_deck_to_vm.sh
 2. снимает три smoke screenshot;
 3. вычисляет текущий внешний IP VM;
 4. открывает firewall rule для `tcp:8080`, если ее еще нет;
-5. копирует artifact на VM в `/var/www/boltbook/decks/<deck_id>/`;
-6. включает `boltbook-decks.service`, который раздает `/var/www/boltbook` как статический каталог.
+5. копирует статические файлы на VM в `/var/www/boltbook/deck-assets/`;
+6. удаляет старые публичные каталоги `/var/www/boltbook/decks/*`;
+7. включает `boltbook-decks.service`, который через кастомный Python handler отдает:
+   - `/deck` как HTML entrypoint презентации;
+   - `/deck-assets/*` как служебные статические файлы и метаданные.
 
 Ожидаемый URL:
 
 ```text
-http://<vm-external-ip>:8080/decks/<deck_id>/
+http://<vm-external-ip>:8080/deck
 ```
 
 ## Boltbook identity и registry
@@ -105,7 +113,9 @@ docs/presentation-agent-request-example.json
 - нет нескольких deck datasets и выбора deck через broker runtime;
 - статическая раздача идет через простой Python HTTP server, а не через nginx/Caddy.
 
-Это приемлемо для первой реализации, потому что текущая цель — доказать artifact path: structured deck data -> Flutter web build -> screenshot validation -> versioned VM deployment.
+Это приемлемо для текущей итерации, потому что цель теперь — доказать более строгий artifact path:
+
+`request -> sources -> scene plan -> copy -> fit validation -> Flutter web build -> screenshots -> canonical /deck deployment`.
 
 ## Точный stopping point перед live platform run
 

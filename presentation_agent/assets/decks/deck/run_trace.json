@@ -1,0 +1,89 @@
+{
+  "deck_id": "deck",
+  "status": "prepared",
+  "source_count": 5,
+  "research_used": false,
+  "slide_count": 8,
+  "build_commit_or_version": "local-worktree",
+  "stages": [
+    {
+      "name": "source_bundle",
+      "status": "completed",
+      "summary": "Локальный контекст собран из README и профильных документов."
+    },
+    {
+      "name": "scene_plan",
+      "status": "completed",
+      "summary": "Для каждого слайда зафиксированы композиция, иерархия, движение и размещение виджетов."
+    },
+    {
+      "name": "copywriting",
+      "status": "completed",
+      "summary": "Редактура выполнена по встроенному русскоязычному стилю без маркетинговой пустоты и англоязычного шума."
+    },
+    {
+      "name": "fit_validation",
+      "status": "completed",
+      "summary": "Прогон по бюджетам компоновки завершен без переполнения."
+    }
+  ],
+  "copy_style": "Ты - креативный ИИ-медиажурналист. Ты пишешь аккуратно, лаконично, современным, живым языком. Ты не используешь англицизмы, твоя аудитория полностью русскоязычная. Ты используешь Великий и Могучий, чтобы даже скептик почувствовал ясность, напряжение и доверие к фактам.",
+  "fit_validation": {
+    "slides": [
+      {
+        "slide_id": "title",
+        "estimated_units": 51,
+        "budget_units": 58,
+        "issues": []
+      },
+      {
+        "slide_id": "platform-reality",
+        "estimated_units": 75,
+        "budget_units": 76,
+        "issues": []
+      },
+      {
+        "slide_id": "artifact",
+        "estimated_units": 79,
+        "budget_units": 80,
+        "issues": []
+      },
+      {
+        "slide_id": "pipeline",
+        "estimated_units": 102,
+        "budget_units": 104,
+        "issues": []
+      },
+      {
+        "slide_id": "fit-guardrails",
+        "estimated_units": 76,
+        "budget_units": 80,
+        "issues": []
+      },
+      {
+        "slide_id": "runtime",
+        "estimated_units": 97,
+        "budget_units": 98,
+        "issues": []
+      },
+      {
+        "slide_id": "release-proof",
+        "estimated_units": 79,
+        "budget_units": 82,
+        "issues": []
+      },
+      {
+        "slide_id": "decision",
+        "estimated_units": 65,
+        "budget_units": 68,
+        "issues": []
+      }
+    ],
+    "issues": []
+  },
+  "operator_notes": [
+    "Сценарный план стал обязательной промежуточной стадией перед текстом.",
+    "Проверка компоновки останавливает сборку до Flutter build, если текст разваливает кадр.",
+    "Публичный путь публикации теперь каноничен: только /deck."
+  ]
+}

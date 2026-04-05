@@ -64,6 +64,25 @@ class PresentationPlan {
   final List<String> openRisks;
   final List<String> assetRequests;
 
+  Map<String, dynamic> toJson() {
+    return {
+      'task_id': taskId,
+      'executor_id': executorId,
+      'deck_id': deckId,
+      'deck_title': deckTitle,
+      'deck_goal': deckGoal,
+      'target_audience': targetAudience,
+      'output_language': outputLanguage,
+      'audience_signals': audienceSignals,
+      'narrative_mode': narrativeMode,
+      'slide_count_target': slideCountTarget,
+      'sources_used': sourcesUsed,
+      'slides': slides.map((slide) => slide.toJson()).toList(),
+      'open_risks': openRisks,
+      'asset_requests': assetRequests,
+    };
+  }
+
   void _validate() {
     if (slides.isEmpty) {
       throw const FormatException('Deck must contain at least one slide');

@@ -1,0 +1,441 @@
+{
+  "deck_id": "deck",
+  "canonical_web_path": "/deck",
+  "copy_style": "Ты - креативный ИИ-медиажурналист. Ты пишешь аккуратно, лаконично, современным, живым языком. Ты не используешь англицизмы, твоя аудитория полностью русскоязычная. Ты используешь Великий и Могучий, чтобы даже скептик почувствовал ясность, напряжение и доверие к фактам.",
+  "scenes": [
+    {
+      "slide_id": "title",
+      "kind": "title",
+      "route": "/intro",
+      "composition": "hero-orbit",
+      "hierarchy": {
+        "primary": "title",
+        "secondary": [
+          "subtitle",
+          "headline"
+        ],
+        "supporting": [
+          "metrics",
+          "deck_id"
+        ]
+      },
+      "motion_intent": "orbit-pop",
+      "copy_brief": "Открыть презентацию как финальный показ для проверяющего: без шума, с ясным обещанием и с прямой связью между продуктом и доказательством.",
+      "widget_placements": [
+        {
+          "slot": "badge",
+          "widget": "eyebrow",
+          "position": "top-left",
+          "emphasis": "primary",
+          "max_items": 1
+        },
+        {
+          "slot": "hero",
+          "widget": "headline_block",
+          "position": "center-left",
+          "emphasis": "primary",
+          "max_items": 1
+        },
+        {
+          "slot": "proof_strip",
+          "widget": "metric_chip",
+          "position": "bottom-left",
+          "emphasis": "supporting",
+          "max_items": 3
+        }
+      ],
+      "fit_budget": {
+        "max_title_chars": 32,
+        "max_headline_chars": 180,
+        "max_subtitle_chars": 220,
+        "max_key_points": 0,
+        "max_metrics": 3,
+        "max_nodes": 0,
+        "max_workflow_steps": 0,
+        "max_evidence_refs": 3,
+        "max_body_chars": 280,
+        "max_visual_direction_chars": 180,
+        "max_units": 58
+      }
+    },
+    {
+      "slide_id": "platform-reality",
+      "kind": "problem",
+      "route": "/platform-reality",
+      "composition": "signal-columns",
+      "hierarchy": {
+        "primary": "headline",
+        "secondary": [
+          "key_points"
+        ],
+        "supporting": [
+          "metrics",
+          "evidence_refs"
+        ]
+      },
+      "motion_intent": "card-rise",
+      "copy_brief": "Честно показать ограничения платформы и сразу превратить каждое ограничение в инженерное решение.",
+      "widget_placements": [
+        {
+          "slot": "lead",
+          "widget": "intro",
+          "position": "top-left",
+          "emphasis": "primary",
+          "max_items": 1
+        },
+        {
+          "slot": "column_a",
+          "widget": "key_point_card",
+          "position": "lower-left",
+          "emphasis": "secondary",
+          "max_items": 2
+        },
+        {
+          "slot": "column_b",
+          "widget": "key_point_card",
+          "position": "lower-right",
+          "emphasis": "secondary",
+          "max_items": 2
+        },
+        {
+          "slot": "rail",
+          "widget": "metric_chip",
+          "position": "right-rail",
+          "emphasis": "supporting",
+          "max_items": 3
+        }
+      ],
+      "fit_budget": {
+        "max_title_chars": 56,
+        "max_headline_chars": 170,
+        "max_subtitle_chars": 200,
+        "max_key_points": 3,
+        "max_metrics": 2,
+        "max_nodes": 0,
+        "max_workflow_steps": 0,
+        "max_evidence_refs": 3,
+        "max_body_chars": 520,
+        "max_visual_direction_chars": 180,
+        "max_units": 76
+      }
+    },
+    {
+      "slide_id": "artifact",
+      "kind": "solution",
+      "route": "/artifact",
+      "composition": "capsule-wall",
+      "hierarchy": {
+        "primary": "headline",
+        "secondary": [
+          "subtitle",
+          "metrics"
+        ],
+        "supporting": [
+          "key_points",
+          "evidence_refs"
+        ]
+      },
+      "motion_intent": "glide-left",
+      "copy_brief": "Показать продукт как уже собранный рабочий контур, а не как обещание будущего маркетплейса.",
+      "widget_placements": [
+        {
+          "slot": "intro",
+          "widget": "intro",
+          "position": "left-stage",
+          "emphasis": "primary",
+          "max_items": 1
+        },
+        {
+          "slot": "proof_wall",
+          "widget": "metric_chip",
+          "position": "bottom-left",
+          "emphasis": "secondary",
+          "max_items": 3
+        },
+        {
+          "slot": "narrative_stack",
+          "widget": "key_point_card",
+          "position": "right-stage",
+          "emphasis": "supporting",
+          "max_items": 3
+        }
+      ],
+      "fit_budget": {
+        "max_title_chars": 60,
+        "max_headline_chars": 170,
+        "max_subtitle_chars": 200,
+        "max_key_points": 3,
+        "max_metrics": 3,
+        "max_nodes": 0,
+        "max_workflow_steps": 0,
+        "max_evidence_refs": 3,
+        "max_body_chars": 520,
+        "max_visual_direction_chars": 180,
+        "max_units": 80
+      }
+    },
+    {
+      "slide_id": "pipeline",
+      "kind": "workflow",
+      "route": "/scene-pipeline",
+      "composition": "control-tower",
+      "hierarchy": {
+        "primary": "headline",
+        "secondary": [
+          "workflow_steps"
+        ],
+        "supporting": [
+          "key_points",
+          "evidence_refs"
+        ]
+      },
+      "motion_intent": "trace-scan",
+      "copy_brief": "Сделать новую цепочку генерации главным героем: источники, сценарный план, редактура, проверка кадра, сборка и публикация.",
+      "widget_placements": [
+        {
+          "slot": "rail",
+          "widget": "intro",
+          "position": "left-rail",
+          "emphasis": "primary",
+          "max_items": 1
+        },
+        {
+          "slot": "timeline",
+          "widget": "workflow_step",
+          "position": "right-stage",
+          "emphasis": "secondary",
+          "max_items": 5
+        },
+        {
+          "slot": "proof_footer",
+          "widget": "evidence_callout",
+          "position": "bottom",
+          "emphasis": "supporting",
+          "max_items": 1
+        }
+      ],
+      "fit_budget": {
+        "max_title_chars": 52,
+        "max_headline_chars": 170,
+        "max_subtitle_chars": 180,
+        "max_key_points": 3,
+        "max_metrics": 0,
+        "max_nodes": 0,
+        "max_workflow_steps": 5,
+        "max_evidence_refs": 3,
+        "max_body_chars": 900,
+        "max_visual_direction_chars": 180,
+        "max_units": 104
+      }
+    },
+    {
+      "slide_id": "fit-guardrails",
+      "kind": "evidence",
+      "route": "/fit-guardrails",
+      "composition": "proof-dashboard",
+      "hierarchy": {
+        "primary": "headline",
+        "secondary": [
+          "metrics",
+          "key_points"
+        ],
+        "supporting": [
+          "evidence_refs"
+        ]
+      },
+      "motion_intent": "dashboard-lift",
+      "copy_brief": "Показать, как новая система не дает тексту тихо вывалиться за границы кадра.",
+      "widget_placements": [
+        {
+          "slot": "intro",
+          "widget": "intro",
+          "position": "top-left",
+          "emphasis": "primary",
+          "max_items": 1
+        },
+        {
+          "slot": "metrics_board",
+          "widget": "metric_chip",
+          "position": "left-board",
+          "emphasis": "secondary",
+          "max_items": 3
+        },
+        {
+          "slot": "proof_stack",
+          "widget": "key_point_card",
+          "position": "right-board",
+          "emphasis": "secondary",
+          "max_items": 3
+        }
+      ],
+      "fit_budget": {
+        "max_title_chars": 44,
+        "max_headline_chars": 176,
+        "max_subtitle_chars": 180,
+        "max_key_points": 3,
+        "max_metrics": 3,
+        "max_nodes": 0,
+        "max_workflow_steps": 0,
+        "max_evidence_refs": 3,
+        "max_body_chars": 560,
+        "max_visual_direction_chars": 180,
+        "max_units": 80
+      }
+    },
+    {
+      "slide_id": "runtime",
+      "kind": "architecture",
+      "route": "/runtime",
+      "composition": "radar-grid",
+      "hierarchy": {
+        "primary": "headline",
+        "secondary": [
+          "nodes"
+        ],
+        "supporting": [
+          "key_points",
+          "evidence_refs"
+        ]
+      },
+      "motion_intent": "constellation",
+      "copy_brief": "Связать брокер, исполнителя, редактор презентации и публикацию на одной схеме без перегрузки.",
+      "widget_placements": [
+        {
+          "slot": "intro",
+          "widget": "intro",
+          "position": "top-left",
+          "emphasis": "primary",
+          "max_items": 1
+        },
+        {
+          "slot": "node_grid",
+          "widget": "architecture_node",
+          "position": "center",
+          "emphasis": "secondary",
+          "max_items": 5
+        },
+        {
+          "slot": "evidence",
+          "widget": "evidence_callout",
+          "position": "bottom-right",
+          "emphasis": "supporting",
+          "max_items": 1
+        }
+      ],
+      "fit_budget": {
+        "max_title_chars": 48,
+        "max_headline_chars": 176,
+        "max_subtitle_chars": 180,
+        "max_key_points": 3,
+        "max_metrics": 0,
+        "max_nodes": 5,
+        "max_workflow_steps": 0,
+        "max_evidence_refs": 3,
+        "max_body_chars": 940,
+        "max_visual_direction_chars": 180,
+        "max_units": 98
+      }
+    },
+    {
+      "slide_id": "release-proof",
+      "kind": "evidence",
+      "route": "/release-proof",
+      "composition": "release-board",
+      "hierarchy": {
+        "primary": "headline",
+        "secondary": [
+          "metrics",
+          "key_points"
+        ],
+        "supporting": [
+          "evidence_refs"
+        ]
+      },
+      "motion_intent": "scanline",
+      "copy_brief": "Показать итоговую публикацию как выпускной щит: канонический адрес, снимки, след выполнения и зачистка старых путей.",
+      "widget_placements": [
+        {
+          "slot": "url_panel",
+          "widget": "metric_chip",
+          "position": "left-board",
+          "emphasis": "primary",
+          "max_items": 3
+        },
+        {
+          "slot": "release_notes",
+          "widget": "key_point_card",
+          "position": "right-board",
+          "emphasis": "secondary",
+          "max_items": 3
+        },
+        {
+          "slot": "evidence",
+          "widget": "evidence_callout",
+          "position": "bottom",
+          "emphasis": "supporting",
+          "max_items": 1
+        }
+      ],
+      "fit_budget": {
+        "max_title_chars": 52,
+        "max_headline_chars": 176,
+        "max_subtitle_chars": 190,
+        "max_key_points": 3,
+        "max_metrics": 3,
+        "max_nodes": 0,
+        "max_workflow_steps": 0,
+        "max_evidence_refs": 3,
+        "max_body_chars": 560,
+        "max_visual_direction_chars": 180,
+        "max_units": 82
+      }
+    },
+    {
+      "slide_id": "decision",
+      "kind": "cta",
+      "route": "/decision",
+      "composition": "decision-poster",
+      "hierarchy": {
+        "primary": "headline",
+        "secondary": [
+          "key_points"
+        ],
+        "supporting": [
+          "subtitle",
+          "evidence_refs"
+        ]
+      },
+      "motion_intent": "poster-rise",
+      "copy_brief": "Закрыть показ как инженерный вердикт: работающий итог вместо чернового наброска.",
+      "widget_placements": [
+        {
+          "slot": "hero",
+          "widget": "intro",
+          "position": "center",
+          "emphasis": "primary",
+          "max_items": 1
+        },
+        {
+          "slot": "claim_row",
+          "widget": "key_point_card",
+          "position": "bottom",
+          "emphasis": "secondary",
+          "max_items": 3
+        }
+      ],
+      "fit_budget": {
+        "max_title_chars": 48,
+        "max_headline_chars": 188,
+        "max_subtitle_chars": 190,
+        "max_key_points": 3,
+        "max_metrics": 0,
+        "max_nodes": 0,
+        "max_workflow_steps": 0,
+        "max_evidence_refs": 3,
+        "max_body_chars": 440,
+        "max_visual_direction_chars": 180,
+        "max_units": 68
+      }
+    }
+  ]
+}

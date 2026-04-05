@@ -1,0 +1,21 @@
+{
+  "task_id": "task_20260405_reviewer_deck_002",
+  "executor_id": "presentation_generator",
+  "status": "prepared",
+  "deck_id": "deck",
+  "deck_title": "Boltbook Broker: финальная презентация для проверяющего",
+  "canonical_web_url": "http://34.38.33.15:8080/deck",
+  "artifact_urls": {},
+  "screenshots": [],
+  "sources_used": [
+    "README.md",
+    "docs/first-iteration-technical-spec.md",
+    "docs/deployment-gcp.md",
+    "docs/presentation-agent-spec.md",
+    "docs/presentation-agent-runbook.md"
+  ],
+  "summary": "Подготовлена финальная русскоязычная презентация для проверяющего: сначала сценарный план, затем редактура, затем проверка компоновки и публикация по каноническому адресу /deck.",
+  "risks": [
+    "Долгоживущий опрос платформы по-прежнему выключен; презентация честно опирается на воспроизводимый след, а не на непрерывный фоновый шум."
+  ]
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:presentation_agent/models/presentation_plan.dart';
+import 'package:presentation_agent/models/scene_plan.dart';
 import 'package:presentation_agent/slides/slide_registry.dart';
 
 void main() {
@@ -31,9 +32,96 @@ void main() {
       ]
     }
     ''';
+    const rawScenePlan = '''
+    {
+      "deck_id": "deck_test",
+      "canonical_web_path": "/deck",
+      "copy_style": "style",
+      "scenes": [
+        {
+          "slide_id":"title",
+          "kind":"title",
+          "route":"/title",
+          "composition":"hero-orbit",
+          "hierarchy":{"primary":"title","secondary":["subtitle"],"supporting":["metrics"]},
+          "motion_intent":"orbit-pop",
+          "copy_brief":"brief",
+          "widget_placements":[{"slot":"hero","widget":"headline","position":"center","emphasis":"primary","max_items":1}],
+          "fit_budget":{"max_title_chars":40,"max_headline_chars":120,"max_subtitle_chars":140,"max_key_points":0,"max_metrics":0,"max_nodes":0,"max_workflow_steps":0,"max_evidence_refs":0,"max_body_chars":0,"max_visual_direction_chars":120,"max_units":30}
+        },
+        {
+          "slide_id":"problem",
+          "kind":"problem",
+          "route":"/problem",
+          "composition":"signal-columns",
+          "hierarchy":{"primary":"headline","secondary":["key_points"],"supporting":["metrics"]},
+          "motion_intent":"card-rise",
+          "copy_brief":"brief",
+          "widget_placements":[{"slot":"body","widget":"card","position":"left","emphasis":"secondary","max_items":3}],
+          "fit_budget":{"max_title_chars":40,"max_headline_chars":120,"max_subtitle_chars":140,"max_key_points":3,"max_metrics":0,"max_nodes":0,"max_workflow_steps":0,"max_evidence_refs":0,"max_body_chars":200,"max_visual_direction_chars":120,"max_units":40}
+        },
+        {
+          "slide_id":"solution",
+          "kind":"solution",
+          "route":"/solution",
+          "composition":"capsule-wall",
+          "hierarchy":{"primary":"headline","secondary":["key_points"],"supporting":["metrics"]},
+          "motion_intent":"glide-left",
+          "copy_brief":"brief",
+          "widget_placements":[{"slot":"body","widget":"card","position":"right","emphasis":"secondary","max_items":3}],
+          "fit_budget":{"max_title_chars":40,"max_headline_chars":120,"max_subtitle_chars":140,"max_key_points":3,"max_metrics":0,"max_nodes":0,"max_workflow_steps":0,"max_evidence_refs":0,"max_body_chars":200,"max_visual_direction_chars":120,"max_units":40}
+        },
+        {
+          "slide_id":"architecture",
+          "kind":"architecture",
+          "route":"/architecture",
+          "composition":"radar-grid",
+          "hierarchy":{"primary":"headline","secondary":["nodes"],"supporting":["evidence_refs"]},
+          "motion_intent":"constellation",
+          "copy_brief":"brief",
+          "widget_placements":[{"slot":"grid","widget":"node","position":"center","emphasis":"secondary","max_items":3}],
+          "fit_budget":{"max_title_chars":40,"max_headline_chars":120,"max_subtitle_chars":140,"max_key_points":3,"max_metrics":0,"max_nodes":3,"max_workflow_steps":0,"max_evidence_refs":1,"max_body_chars":220,"max_visual_direction_chars":120,"max_units":50}
+        },
+        {
+          "slide_id":"workflow",
+          "kind":"workflow",
+          "route":"/workflow",
+          "composition":"control-tower",
+          "hierarchy":{"primary":"headline","secondary":["workflow_steps"],"supporting":["key_points"]},
+          "motion_intent":"trace-scan",
+          "copy_brief":"brief",
+          "widget_placements":[{"slot":"timeline","widget":"step","position":"right","emphasis":"secondary","max_items":2}],
+          "fit_budget":{"max_title_chars":40,"max_headline_chars":120,"max_subtitle_chars":140,"max_key_points":3,"max_metrics":0,"max_nodes":0,"max_workflow_steps":2,"max_evidence_refs":0,"max_body_chars":240,"max_visual_direction_chars":120,"max_units":50}
+        },
+        {
+          "slide_id":"evidence",
+          "kind":"evidence",
+          "route":"/evidence",
+          "composition":"proof-dashboard",
+          "hierarchy":{"primary":"headline","secondary":["metrics","key_points"],"supporting":["evidence_refs"]},
+          "motion_intent":"dashboard-lift",
+          "copy_brief":"brief",
+          "widget_placements":[{"slot":"proof","widget":"metric","position":"left","emphasis":"secondary","max_items":2}],
+          "fit_budget":{"max_title_chars":40,"max_headline_chars":120,"max_subtitle_chars":140,"max_key_points":2,"max_metrics":2,"max_nodes":0,"max_workflow_steps":0,"max_evidence_refs":1,"max_body_chars":220,"max_visual_direction_chars":120,"max_units":45}
+        },
+        {
+          "slide_id":"cta",
+          "kind":"cta",
+          "route":"/cta",
+          "composition":"decision-poster",
+          "hierarchy":{"primary":"headline","secondary":["key_points"],"supporting":["subtitle"]},
+          "motion_intent":"poster-rise",
+          "copy_brief":"brief",
+          "widget_placements":[{"slot":"poster","widget":"card","position":"bottom","emphasis":"secondary","max_items":3}],
+          "fit_budget":{"max_title_chars":40,"max_headline_chars":120,"max_subtitle_chars":140,"max_key_points":3,"max_metrics":0,"max_nodes":0,"max_workflow_steps":0,"max_evidence_refs":0,"max_body_chars":200,"max_visual_direction_chars":120,"max_units":40}
+        }
+      ]
+    }
+    ''';
 
     final plan = PresentationPlan.fromAssetJson(rawJson);
-    final registry = SlideRegistry(plan: plan);
+    final scenePlan = ScenePlan.fromJsonString(rawScenePlan);
+    final registry = SlideRegistry(plan: plan, scenePlan: scenePlan);
     final slides = registry.buildSlides();
 
     expect(slides, hasLength(7));

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-DECK_ID="${DECK_ID:-deck_20260405_final_ru_001}"
+DECK_ID="${DECK_ID:-deck}"
 ARTIFACT_DIR="${ARTIFACT_DIR:-${ROOT_DIR}/build/decks/${DECK_ID}}"
 SITE_DIR="${ARTIFACT_DIR}/site"
 PORT="${PORT:-8123}"

@@ -4,11 +4,12 @@ First narrow Flutter web executor slice for the `Presentation Generator` spec.
 
 ## What it does
 
-- loads a structured `presentation_plan.json` from `assets/decks/<deck_id>/`
-- maps supported slide kinds to `flutter_deck` widgets
-- builds a reviewer-facing deck for the current Boltbook Broker project
+- loads a generation request from `assets/decks/<deck_id>/request.json`
+- builds `sources.json`, `scene_plan.json`, and the final `presentation_plan.json`
+- validates language, audience signals, and fit budgets before `flutter build web`
+- maps slide kinds to scene-aware Flutter layouts instead of one repeated split template
 - captures smoke screenshots with headless Chrome
-- publishes versioned static artifacts to the existing GCP VM
+- publishes the reviewer-facing deck to the canonical public URL `http://34.38.33.15:8080/deck`
 
 ## Current supported slide kinds
 
@@ -33,14 +34,14 @@ Run locally in Chrome:
 
 ```bash
 cd presentation_agent
-flutter run -d chrome --dart-define=DECK_ID=deck_20260405_final_ru_001
+flutter run -d chrome --dart-define=DECK_ID=deck
 ```
 
 ## Deploy to the VM
 
 ```bash
 cd presentation_agent
-DECK_ID=deck_20260405_final_ru_001 \
+DECK_ID=deck \
 PROJECT_ID=boltbook-ai-dz-20260404 \
 ZONE=europe-west1-b \
 INSTANCE_NAME=boltbook-mvp-vm \
@@ -49,9 +50,11 @@ tool/deploy_deck_to_vm.sh
 
 The deploy script:
 
-- validates `output_language` and `audience_signals` before the Flutter build starts
+- regenerates the deck from the request each time
+- validates `output_language`, `audience_signals`, and fit budgets before the Flutter build starts
 - rebuilds the web artifact
 - captures three smoke screenshots
 - opens TCP port `8080` if the firewall rule is missing
-- syncs the static site to `/var/www/boltbook/decks/<deck_id>/`
-- enables a simple systemd-backed Python static server on the VM
+- syncs the static asset bundle to `/var/www/boltbook/deck-assets/`
+- exposes the deck at `/deck` through a custom Python static server with the correct HTML content type
+- removes the old public `/decks/<deck_id>/` layout from the VM

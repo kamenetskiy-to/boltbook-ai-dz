@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_deck/flutter_deck.dart';
 import 'package:presentation_agent/app/theme.dart';
 import 'package:presentation_agent/models/presentation_plan.dart';
+import 'package:presentation_agent/models/scene_plan.dart';
 import 'package:presentation_agent/slides/slide_registry.dart';
 
 class PresentationDeckBootstrap extends StatelessWidget {
@@ -10,17 +11,23 @@ class PresentationDeckBootstrap extends StatelessWidget {
 
   final String deckId;
 
-  Future<PresentationPlan> _loadPlan() async {
-    final rawJson = await rootBundle.loadString(
+  Future<(PresentationPlan, ScenePlan)> _loadDeck() async {
+    final planJson = await rootBundle.loadString(
       'assets/decks/$deckId/presentation_plan.json',
     );
-    return PresentationPlan.fromAssetJson(rawJson);
+    final sceneJson = await rootBundle.loadString(
+      'assets/decks/$deckId/scene_plan.json',
+    );
+    final plan = PresentationPlan.fromAssetJson(planJson);
+    final scenePlan = ScenePlan.fromJsonString(sceneJson);
+    scenePlan.runFitChecks(plan);
+    return (plan, scenePlan);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<PresentationPlan>(
-      future: _loadPlan(),
+    return FutureBuilder<(PresentationPlan, ScenePlan)>(
+      future: _loadDeck(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return MaterialApp(
@@ -53,8 +60,8 @@ class PresentationDeckBootstrap extends StatelessWidget {
           );
         }
 
-        final plan = snapshot.data!;
-        final slideRegistry = SlideRegistry(plan: plan);
+        final (plan, scenePlan) = snapshot.data!;
+        final slideRegistry = SlideRegistry(plan: plan, scenePlan: scenePlan);
 
         return FlutterDeckApp(
           configuration: PresentationTheme.deckConfiguration,

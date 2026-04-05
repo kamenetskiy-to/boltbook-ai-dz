@@ -26,6 +26,10 @@ class MetricSpec {
 
   final String label;
   final String value;
+
+  Map<String, dynamic> toJson() {
+    return {'label': label, 'value': value};
+  }
 }
 
 class ArchitectureNodeSpec {
@@ -46,6 +50,10 @@ class ArchitectureNodeSpec {
   final String title;
   final String subtitle;
   final String detail;
+
+  Map<String, dynamic> toJson() {
+    return {'title': title, 'subtitle': subtitle, 'detail': detail};
+  }
 }
 
 class WorkflowStepSpec {
@@ -60,6 +68,10 @@ class WorkflowStepSpec {
 
   final String title;
   final String detail;
+
+  Map<String, dynamic> toJson() {
+    return {'title': title, 'detail': detail};
+  }
 }
 
 class SlideSpec {
@@ -119,6 +131,28 @@ class SlideSpec {
   final List<MetricSpec> metrics;
   final List<ArchitectureNodeSpec> nodes;
   final List<WorkflowStepSpec> workflowSteps;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'slide_id': slideId,
+      'kind': kind.name,
+      'route': route,
+      'title': title,
+      if (eyebrow != null) 'eyebrow': eyebrow,
+      if (headline != null) 'headline': headline,
+      if (subtitle != null) 'subtitle': subtitle,
+      'key_points': keyPoints,
+      'evidence_refs': evidenceRefs,
+      'visual_direction': visualDirection,
+      'notes': notes,
+      if (metrics.isNotEmpty)
+        'metrics': metrics.map((metric) => metric.toJson()).toList(),
+      if (nodes.isNotEmpty)
+        'nodes': nodes.map((node) => node.toJson()).toList(),
+      if (workflowSteps.isNotEmpty)
+        'workflow_steps': workflowSteps.map((step) => step.toJson()).toList(),
+    };
+  }
 }
 
 extension JsonMapX on Map<String, dynamic> {
