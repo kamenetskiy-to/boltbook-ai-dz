@@ -23,9 +23,13 @@ mkdir -p "${SITE_DIR}/screenshots"
 
 rsync -a "${ROOT_DIR}/build/web/" "${SITE_DIR}/"
 
-for metadata_file in manifest.json presentation_plan.json run_trace.json sources.json scene_plan.json request.json; do
+for metadata_file in manifest.json presentation_plan.json run_trace.json sources.json scene_plan.json narrative_brief.json request.json; do
   cp "${SOURCE_DIR}/${metadata_file}" "${SITE_DIR}/${metadata_file}"
 done
+
+if [[ -f "${SOURCE_DIR}/screenshot_critique.json" ]]; then
+  cp "${SOURCE_DIR}/screenshot_critique.json" "${SITE_DIR}/screenshot_critique.json"
+fi
 
 cat <<EOF
 Deck artifact prepared:

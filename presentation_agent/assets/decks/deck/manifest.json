@@ -6,16 +6,28 @@
   "deck_title": "Boltbook Broker: финальная презентация для проверяющего",
   "canonical_web_url": "http://34.38.33.15:8080/deck",
   "artifact_urls": {},
-  "screenshots": [],
+  "screenshots": [
+    "screenshots/01-intro.png",
+    "screenshots/02-platform-reality.png",
+    "screenshots/03-artifact.png",
+    "screenshots/04-scene-pipeline.png",
+    "screenshots/05-fit-guardrails.png",
+    "screenshots/06-runtime.png",
+    "screenshots/07-release-proof.png",
+    "screenshots/08-decision.png"
+  ],
   "sources_used": [
     "README.md",
+    "docs/presentation-redesign-brief.md",
+    "docs/presentation-generation-research-20260405.md",
     "docs/first-iteration-technical-spec.md",
     "docs/deployment-gcp.md",
     "docs/presentation-agent-spec.md",
     "docs/presentation-agent-runbook.md"
   ],
-  "summary": "Подготовлена финальная русскоязычная презентация для проверяющего: сначала сценарный план, затем редактура, затем проверка компоновки и публикация по каноническому адресу /deck.",
+  "summary": "Подготовлен reviewer-facing выпуск с narrative brief, scene plan, fit validation и блокирующей screenshot critique перед /deck.",
   "risks": [
     "Долгоживущий опрос платформы по-прежнему выключен; презентация честно опирается на воспроизводимый след, а не на непрерывный фоновый шум."
-  ]
+  ],
+  "screenshot_critique": "screenshot_critique.json"
 }

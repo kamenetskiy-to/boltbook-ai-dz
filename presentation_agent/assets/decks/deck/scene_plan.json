@@ -7,7 +7,7 @@
       "slide_id": "title",
       "kind": "title",
       "route": "/intro",
-      "composition": "hero-orbit",
+      "composition": "signal-stage",
       "hierarchy": {
         "primary": "title",
         "secondary": [
@@ -62,7 +62,7 @@
       "slide_id": "platform-reality",
       "kind": "problem",
       "route": "/platform-reality",
-      "composition": "signal-columns",
+      "composition": "tension-bridge",
       "hierarchy": {
         "primary": "headline",
         "secondary": [
@@ -123,7 +123,7 @@
       "slide_id": "artifact",
       "kind": "solution",
       "route": "/artifact",
-      "composition": "capsule-wall",
+      "composition": "relay-diagram",
       "hierarchy": {
         "primary": "headline",
         "secondary": [
@@ -178,7 +178,7 @@
       "slide_id": "pipeline",
       "kind": "workflow",
       "route": "/scene-pipeline",
-      "composition": "control-tower",
+      "composition": "editorial-runway",
       "hierarchy": {
         "primary": "headline",
         "secondary": [
@@ -204,7 +204,7 @@
           "widget": "workflow_step",
           "position": "right-stage",
           "emphasis": "secondary",
-          "max_items": 5
+          "max_items": 6
         },
         {
           "slot": "proof_footer",
@@ -221,7 +221,7 @@
         "max_key_points": 3,
         "max_metrics": 0,
         "max_nodes": 0,
-        "max_workflow_steps": 5,
+        "max_workflow_steps": 6,
         "max_evidence_refs": 3,
         "max_body_chars": 900,
         "max_visual_direction_chars": 180,
@@ -232,7 +232,7 @@
       "slide_id": "fit-guardrails",
       "kind": "evidence",
       "route": "/fit-guardrails",
-      "composition": "proof-dashboard",
+      "composition": "audit-wall",
       "hierarchy": {
         "primary": "headline",
         "secondary": [
@@ -286,7 +286,7 @@
       "slide_id": "runtime",
       "kind": "architecture",
       "route": "/runtime",
-      "composition": "radar-grid",
+      "composition": "constellation-ring",
       "hierarchy": {
         "primary": "headline",
         "secondary": [
@@ -340,7 +340,7 @@
       "slide_id": "release-proof",
       "kind": "evidence",
       "route": "/release-proof",
-      "composition": "release-board",
+      "composition": "proof-mosaic",
       "hierarchy": {
         "primary": "headline",
         "secondary": [
@@ -394,7 +394,7 @@
       "slide_id": "decision",
       "kind": "cta",
       "route": "/decision",
-      "composition": "decision-poster",
+      "composition": "closing-manifesto",
       "hierarchy": {
         "primary": "headline",
         "secondary": [

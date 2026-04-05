@@ -19,25 +19,36 @@ class SceneShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final background = _background(scene.composition, accentColor);
+    final textTheme = FlutterDeckTheme.of(context).textTheme;
 
     return DecoratedBox(
       decoration: BoxDecoration(gradient: background),
       child: Stack(
         children: [
-          Positioned(
-            top: -120,
-            right: -80,
-            child: _SceneOrb(
-              color: accentColor.withValues(alpha: 0.18),
-              size: 320,
+          Positioned.fill(
+            child: IgnorePointer(
+              child: CustomPaint(
+                painter: _ScenePatternPainter(
+                  composition: scene.composition,
+                  accentColor: accentColor,
+                ),
+              ),
             ),
           ),
           Positioned(
-            left: -80,
-            bottom: -120,
+            top: -140,
+            right: -110,
+            child: _SceneOrb(
+              color: accentColor.withValues(alpha: 0.18),
+              size: 360,
+            ),
+          ),
+          Positioned(
+            left: -100,
+            bottom: -150,
             child: _SceneOrb(
               color: PresentationTheme.evidence.withValues(alpha: 0.12),
-              size: 260,
+              size: 300,
             ),
           ),
           Positioned(
@@ -45,7 +56,7 @@ class SceneShell extends StatelessWidget {
             right: 68,
             child: Text(
               scene.composition.replaceAll('-', ' '),
-              style: FlutterDeckTheme.of(context).textTheme.bodySmall.copyWith(
+              style: textTheme.bodySmall.copyWith(
                 color: Colors.white.withValues(alpha: 0.16),
                 letterSpacing: 1.4,
                 fontWeight: FontWeight.w700,
@@ -63,49 +74,54 @@ class SceneShell extends StatelessWidget {
 
   static Gradient _background(String composition, Color accentColor) {
     switch (composition) {
-      case 'signal-columns':
+      case 'signal-stage':
         return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF130E0A), Color(0xFF251C16), Color(0xFF31251C)],
+          colors: [Color(0xFF0B1319), Color(0xFF123E3B), Color(0xFF365E4E)],
         );
-      case 'capsule-wall':
+      case 'tension-bridge':
         return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF07141A), Color(0xFF11313D), Color(0xFF1C4B46)],
+          colors: [Color(0xFF17100A), Color(0xFF2D1B14), Color(0xFF4B2F23)],
         );
-      case 'control-tower':
+      case 'relay-diagram':
         return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF08101B), Color(0xFF16203E), Color(0xFF173A54)],
+          colors: [Color(0xFF091118), Color(0xFF0F293B), Color(0xFF155B52)],
         );
-      case 'proof-dashboard':
+      case 'editorial-runway':
         return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF080E1A), Color(0xFF102535), Color(0xFF163D4A)],
+          colors: [Color(0xFF0A0F1D), Color(0xFF182342), Color(0xFF234E73)],
         );
-      case 'radar-grid':
+      case 'audit-wall':
         return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF090E1D), Color(0xFF162641), Color(0xFF213246)],
+          colors: [Color(0xFF07131C), Color(0xFF11303E), Color(0xFF1E4855)],
         );
-      case 'release-board':
+      case 'constellation-ring':
         return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF0A0F18), Color(0xFF112335), Color(0xFF20303B)],
+          colors: [Color(0xFF0A0D1D), Color(0xFF1A2045), Color(0xFF263252)],
         );
-      case 'decision-poster':
+      case 'proof-mosaic':
         return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF130C10), Color(0xFF301720), Color(0xFF41292F)],
+          colors: [Color(0xFF0B1018), Color(0xFF13263C), Color(0xFF264249)],
         );
-      case 'hero-orbit':
+      case 'closing-manifesto':
+        return const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF170D12), Color(0xFF351822), Color(0xFF573741)],
+        );
       default:
         return LinearGradient(
           begin: Alignment.topLeft,
@@ -233,6 +249,7 @@ class SceneReveal extends StatelessWidget {
           'trace-scan' => Offset(0, 28 * (1 - progress)),
           'dashboard-lift' => Offset(0, 24 * (1 - progress)),
           'poster-rise' => Offset(0, 34 * (1 - progress)),
+          'scanline' => Offset(18 * (1 - progress), 0),
           _ => Offset(0, 22 * (1 - progress)),
         };
         final scale = switch (scene.motionIntent) {
@@ -251,6 +268,105 @@ class SceneReveal extends StatelessWidget {
       },
       child: child,
     );
+  }
+}
+
+class _ScenePatternPainter extends CustomPainter {
+  const _ScenePatternPainter({
+    required this.composition,
+    required this.accentColor,
+  });
+
+  final String composition;
+  final Color accentColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final stroke = Paint()
+      ..style = PaintingStyle.stroke
+      ..color = Colors.white.withValues(alpha: 0.08)
+      ..strokeWidth = 1;
+    final accentStroke = Paint()
+      ..style = PaintingStyle.stroke
+      ..color = accentColor.withValues(alpha: 0.18)
+      ..strokeWidth = 1.2;
+
+    switch (composition) {
+      case 'tension-bridge':
+        final path = Path()
+          ..moveTo(size.width * 0.08, size.height * 0.82)
+          ..lineTo(size.width * 0.36, size.height * 0.36)
+          ..lineTo(size.width * 0.7, size.height * 0.54)
+          ..lineTo(size.width * 0.95, size.height * 0.18);
+        canvas.drawPath(path, accentStroke);
+        break;
+      case 'relay-diagram':
+        for (final x in [0.24, 0.5, 0.76]) {
+          canvas.drawCircle(
+            Offset(size.width * x, size.height * 0.44),
+            110,
+            stroke,
+          );
+        }
+        break;
+      case 'editorial-runway':
+        for (var i = 0; i < 8; i++) {
+          final y = size.height * (0.12 + (i * 0.1));
+          canvas.drawLine(
+            Offset(size.width * 0.5, y),
+            Offset(size.width * 0.92, y),
+            stroke,
+          );
+        }
+        break;
+      case 'constellation-ring':
+        canvas.drawCircle(
+          Offset(size.width * 0.62, size.height * 0.48),
+          size.height * 0.24,
+          accentStroke,
+        );
+        break;
+      case 'proof-mosaic':
+        for (var col = 0; col < 4; col++) {
+          for (var row = 0; row < 3; row++) {
+            canvas.drawRRect(
+              RRect.fromRectAndRadius(
+                Rect.fromLTWH(
+                  size.width * (0.52 + (col * 0.1)),
+                  size.height * (0.1 + (row * 0.17)),
+                  size.width * 0.07,
+                  size.height * 0.1,
+                ),
+                const Radius.circular(18),
+              ),
+              stroke,
+            );
+          }
+        }
+        break;
+      case 'closing-manifesto':
+        for (var i = 0; i < 5; i++) {
+          final dx = size.width * (0.08 + i * 0.18);
+          canvas.drawLine(
+            Offset(dx, size.height * 0.18),
+            Offset(dx + size.width * 0.12, size.height * 0.02),
+            accentStroke,
+          );
+        }
+        break;
+      default:
+        canvas.drawCircle(
+          Offset(size.width * 0.75, size.height * 0.18),
+          160,
+          stroke,
+        );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _ScenePatternPainter oldDelegate) {
+    return oldDelegate.composition != composition ||
+        oldDelegate.accentColor != accentColor;
   }
 }
 

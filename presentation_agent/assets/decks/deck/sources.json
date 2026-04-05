@@ -13,6 +13,26 @@
     },
     {
       "type": "local_doc",
+      "path": "docs/presentation-redesign-brief.md",
+      "confidence": "high",
+      "facts": [
+        "Старый deck запрещено использовать как содержательный референс.",
+        "Новый pipeline обязан включать narrative brief, scene plan, copywriting, fit validation и screenshot critique.",
+        "Публичный reviewer-facing адрес должен оставаться только один: /deck."
+      ]
+    },
+    {
+      "type": "local_doc",
+      "path": "docs/presentation-generation-research-20260405.md",
+      "confidence": "high",
+      "facts": [
+        "Сильные presentation pipelines сначала строят narrative planning, а потом пишут copy.",
+        "Пострендерная visual critique должна быть блокирующей стадией, а не приложением к релизу.",
+        "Различимые scene families лучше прямой генерации однотипных раскладок."
+      ]
+    },
+    {
+      "type": "local_doc",
       "path": "docs/first-iteration-technical-spec.md",
       "confidence": "high",
       "facts": [

@@ -127,10 +127,46 @@ class SourceBundleArtifact {
   }
 }
 
+class NarrativeBriefArtifact {
+  const NarrativeBriefArtifact({
+    required this.deckId,
+    required this.audience,
+    required this.skepticismProfile,
+    required this.proofGoal,
+    required this.proofOrder,
+    required this.nonNegotiableClaims,
+    required this.prohibitedClaims,
+    required this.tone,
+  });
+
+  final String deckId;
+  final String audience;
+  final List<String> skepticismProfile;
+  final String proofGoal;
+  final List<String> proofOrder;
+  final List<String> nonNegotiableClaims;
+  final List<String> prohibitedClaims;
+  final String tone;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'deck_id': deckId,
+      'audience': audience,
+      'skepticism_profile': skepticismProfile,
+      'proof_goal': proofGoal,
+      'proof_order': proofOrder,
+      'non_negotiable_claims': nonNegotiableClaims,
+      'prohibited_claims': prohibitedClaims,
+      'tone': tone,
+    };
+  }
+}
+
 class GeneratedDeckArtifact {
   const GeneratedDeckArtifact({
     required this.request,
     required this.sources,
+    required this.narrativeBrief,
     required this.scenePlan,
     required this.presentationPlan,
     required this.fitReport,
@@ -140,6 +176,7 @@ class GeneratedDeckArtifact {
 
   final DeckRequest request;
   final SourceBundleArtifact sources;
+  final NarrativeBriefArtifact narrativeBrief;
   final ScenePlan scenePlan;
   final PresentationPlan presentationPlan;
   final ScenePlanFitReport fitReport;
@@ -152,6 +189,7 @@ GeneratedDeckArtifact generateDeckArtifacts({
   required Directory repoRoot,
 }) {
   final sources = _buildSourceBundle(request: request, repoRoot: repoRoot);
+  final narrativeBrief = _buildNarrativeBrief(request);
   final scenePlan = _buildScenePlan(request);
   final presentationPlan = _buildPresentationPlan(request);
   final fitReport = scenePlan.runFitChecks(presentationPlan);
@@ -172,9 +210,9 @@ GeneratedDeckArtifact generateDeckArtifacts({
     'screenshots': <String>[],
     'sources_used': request.sourceBundle,
     'summary':
-        'Подготовлена финальная русскоязычная презентация для проверяющего: '
-        'сначала сценарный план, затем редактура, затем проверка компоновки '
-        'и публикация по каноническому адресу /deck.',
+        'Подготовлен новый reviewer-facing выпуск: сначала опорные источники, '
+        'затем narrative brief, отдельный сцен-план, редактура, проверка '
+        'кадра и выпуск только через /deck.',
     'risks': [
       'Долгоживущий опрос платформы по-прежнему выключен; презентация честно '
           'опирается на воспроизводимый след, а не на непрерывный фоновый шум.',
@@ -193,7 +231,15 @@ GeneratedDeckArtifact generateDeckArtifacts({
         'name': 'source_bundle',
         'status': 'completed',
         'summary':
-            'Локальный контекст собран из README и профильных документов.',
+            'Локальный контекст собран из README, redesign brief и '
+            'профильных документов.',
+      },
+      {
+        'name': 'narrative_brief',
+        'status': 'completed',
+        'summary':
+            'Зафиксированы скепсис проверяющего, порядок доказательства и '
+            'запрещенные обещания.',
       },
       {
         'name': 'scene_plan',
@@ -214,13 +260,29 @@ GeneratedDeckArtifact generateDeckArtifacts({
         'status': 'completed',
         'summary': 'Прогон по бюджетам компоновки завершен без переполнения.',
       },
+      {
+        'name': 'render_and_capture',
+        'status': 'pending',
+        'summary':
+            'После Flutter build будут сняты кадры по всем маршрутам deck.',
+      },
+      {
+        'name': 'screenshot_critique',
+        'status': 'pending',
+        'summary':
+            'Кадры еще не проверены по контрасту, заполненности и различимости.',
+      },
     ],
     'copy_style': reviewerCopyStyle,
+    'narrative_brief': narrativeBrief.toJson(),
     'fit_validation': fitReport.toJson(),
     'operator_notes': [
+      'Narrative brief стал обязательной стадией перед сцен-планом.',
       'Сценарный план стал обязательной промежуточной стадией перед текстом.',
       'Проверка компоновки останавливает сборку до Flutter build, если текст '
           'разваливает кадр.',
+      'Скриншоты теперь не только собираются, но и проходят формализованную '
+          'послесборочную критику.',
       'Публичный путь публикации теперь каноничен: только /deck.',
     ],
   };
@@ -228,6 +290,7 @@ GeneratedDeckArtifact generateDeckArtifacts({
   return GeneratedDeckArtifact(
     request: request,
     sources: sources,
+    narrativeBrief: narrativeBrief,
     scenePlan: scenePlan,
     presentationPlan: presentationPlan,
     fitReport: fitReport,
@@ -248,6 +311,10 @@ void writeGeneratedDeckArtifact({
   _writeJson(
     File('${outputDirectory.path}/scene_plan.json'),
     artifact.scenePlan.toJson(),
+  );
+  _writeJson(
+    File('${outputDirectory.path}/narrative_brief.json'),
+    artifact.narrativeBrief.toJson(),
   );
   _writeJson(
     File('${outputDirectory.path}/presentation_plan.json'),
@@ -312,6 +379,41 @@ SourceBundleArtifact _buildSourceBundle({
   );
 }
 
+NarrativeBriefArtifact _buildNarrativeBrief(DeckRequest request) {
+  return NarrativeBriefArtifact(
+    deckId: request.deckId,
+    audience: request.targetAudience,
+    skepticismProfile: const [
+      'Проверяющий не обязан верить в большой готовый рынок.',
+      'Ему нужен живой след, а не только локальный запуск.',
+      'Однообразный инженерный нарратив убивает убедительность даже при хорошей архитектуре.',
+    ],
+    proofGoal:
+        'Показать Boltbook Broker как работающий слой координации между '
+        'агентами, где Fixer и presentation_generator выступают реальными '
+        'исполнителями, а /deck служит финальным reviewer-facing артефактом.',
+    proofOrder: const [
+      'Сначала объяснить, почему брокер — это слой координации, а не витрина.',
+      'Затем показать живой A2A-контур и публичный след.',
+      'После этого закрепить архитектурную ось Model Colloquium.',
+      'В конце доказать, что новая презентационная цепочка сама стала зрелым артефактом релиза.',
+    ],
+    nonNegotiableClaims: const [
+      'Главный артефакт подачи — Boltbook Broker.',
+      'Презентация обязана быть полностью русскоязычной и reviewer-facing.',
+      'Публикация допускается только по каноническому пути /deck.',
+    ],
+    prohibitedClaims: const [
+      'Нельзя выдавать проект за готовый маркетплейс.',
+      'Нельзя использовать старый deck как содержательный референс.',
+      'Нельзя заменять живой русский текст англоязычным техно-жаргоном.',
+    ],
+    tone:
+        'Плотный, редакторский, живой и доказательный. Без канцелярита, без '
+        'маркетинговой ваты, без лишнего пафоса.',
+  );
+}
+
 ScenePlan _buildScenePlan(DeckRequest request) {
   return ScenePlan(
     deckId: request.deckId,
@@ -322,7 +424,7 @@ ScenePlan _buildScenePlan(DeckRequest request) {
         slideId: 'title',
         kind: SlideKind.title,
         route: '/intro',
-        composition: 'hero-orbit',
+        composition: 'signal-stage',
         hierarchy: SceneHierarchy(
           primary: 'title',
           secondary: ['subtitle', 'headline'],
@@ -374,7 +476,7 @@ ScenePlan _buildScenePlan(DeckRequest request) {
         slideId: 'platform-reality',
         kind: SlideKind.problem,
         route: '/platform-reality',
-        composition: 'signal-columns',
+        composition: 'tension-bridge',
         hierarchy: SceneHierarchy(
           primary: 'headline',
           secondary: ['key_points'],
@@ -432,7 +534,7 @@ ScenePlan _buildScenePlan(DeckRequest request) {
         slideId: 'artifact',
         kind: SlideKind.solution,
         route: '/artifact',
-        composition: 'capsule-wall',
+        composition: 'relay-diagram',
         hierarchy: SceneHierarchy(
           primary: 'headline',
           secondary: ['subtitle', 'metrics'],
@@ -483,7 +585,7 @@ ScenePlan _buildScenePlan(DeckRequest request) {
         slideId: 'pipeline',
         kind: SlideKind.workflow,
         route: '/scene-pipeline',
-        composition: 'control-tower',
+        composition: 'editorial-runway',
         hierarchy: SceneHierarchy(
           primary: 'headline',
           secondary: ['workflow_steps'],
@@ -506,7 +608,7 @@ ScenePlan _buildScenePlan(DeckRequest request) {
             widget: 'workflow_step',
             position: 'right-stage',
             emphasis: 'secondary',
-            maxItems: 5,
+            maxItems: 6,
           ),
           WidgetPlacementSpec(
             slot: 'proof_footer',
@@ -523,7 +625,7 @@ ScenePlan _buildScenePlan(DeckRequest request) {
           maxKeyPoints: 3,
           maxMetrics: 0,
           maxNodes: 0,
-          maxWorkflowSteps: 5,
+          maxWorkflowSteps: 6,
           maxEvidenceRefs: 3,
           maxBodyChars: 900,
           maxVisualDirectionChars: 180,
@@ -534,7 +636,7 @@ ScenePlan _buildScenePlan(DeckRequest request) {
         slideId: 'fit-guardrails',
         kind: SlideKind.evidence,
         route: '/fit-guardrails',
-        composition: 'proof-dashboard',
+        composition: 'audit-wall',
         hierarchy: SceneHierarchy(
           primary: 'headline',
           secondary: ['metrics', 'key_points'],
@@ -585,7 +687,7 @@ ScenePlan _buildScenePlan(DeckRequest request) {
         slideId: 'runtime',
         kind: SlideKind.architecture,
         route: '/runtime',
-        composition: 'radar-grid',
+        composition: 'constellation-ring',
         hierarchy: SceneHierarchy(
           primary: 'headline',
           secondary: ['nodes'],
@@ -636,7 +738,7 @@ ScenePlan _buildScenePlan(DeckRequest request) {
         slideId: 'release-proof',
         kind: SlideKind.evidence,
         route: '/release-proof',
-        composition: 'release-board',
+        composition: 'proof-mosaic',
         hierarchy: SceneHierarchy(
           primary: 'headline',
           secondary: ['metrics', 'key_points'],
@@ -687,7 +789,7 @@ ScenePlan _buildScenePlan(DeckRequest request) {
         slideId: 'decision',
         kind: SlideKind.cta,
         route: '/decision',
-        composition: 'decision-poster',
+        composition: 'closing-manifesto',
         hierarchy: SceneHierarchy(
           primary: 'headline',
           secondary: ['key_points'],
@@ -1102,6 +1204,18 @@ List<String> _factsForSource(String path) {
         'Boltbook Broker остается главным артефактом подачи.',
         'Fixer выступает первым публичным исполнителем в реестре.',
         'Публичная проверка уже опирается на след в post 445.',
+      ];
+    case 'docs/presentation-redesign-brief.md':
+      return const [
+        'Старый deck запрещено использовать как содержательный референс.',
+        'Новый pipeline обязан включать narrative brief, scene plan, copywriting, fit validation и screenshot critique.',
+        'Публичный reviewer-facing адрес должен оставаться только один: /deck.',
+      ];
+    case 'docs/presentation-generation-research-20260405.md':
+      return const [
+        'Сильные presentation pipelines сначала строят narrative planning, а потом пишут copy.',
+        'Пострендерная visual critique должна быть блокирующей стадией, а не приложением к релизу.',
+        'Различимые scene families лучше прямой генерации однотипных раскладок.',
       ];
     case 'docs/first-iteration-technical-spec.md':
       return const [

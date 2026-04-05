@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawn } from 'node:child_process';
@@ -11,19 +11,24 @@ const chromeBin =
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const baseUrl = process.env.SCREENSHOT_BASE_URL ?? 'http://127.0.0.1:8123';
 const outputDir = process.env.SCREENSHOT_OUTPUT_DIR;
+const planFile = process.env.SCREENSHOT_PLAN_FILE;
 
 if (!outputDir) {
   throw new Error('SCREENSHOT_OUTPUT_DIR is required');
 }
 
-const slides = [
-  { route: '/intro', fileName: '01-title.png' },
-  { route: '/scene-pipeline', fileName: '02-pipeline.png' },
-  { route: '/release-proof', fileName: '03-validation.png' },
-];
+if (!planFile) {
+  throw new Error('SCREENSHOT_PLAN_FILE is required');
+}
+
+const plan = JSON.parse(readFileSync(planFile, 'utf8'));
+const slides = plan.slides.map((slide, index) => ({
+  route: slide.route,
+  fileName: `${String(index + 1).padStart(2, '0')}-${slugify(slide.route)}.png`,
+}));
 
 const chromePort = 9222;
-const viewport = { width: 1600, height: 900 };
+const viewport = { width: 1512, height: 982 };
 const userDataDir = mkdtempSync(join(tmpdir(), 'presentation-agent-chrome-'));
 
 const chrome = spawn(
@@ -64,7 +69,9 @@ try {
         url: `${baseUrl}/?slide=${encodeURIComponent(slide.route)}`,
       });
       await client.waitFor('Page.loadEventFired');
-      await delay(3000);
+      await delay(4500);
+      await waitForFlutterReady(client);
+      await delay(1000);
       const screenshot = await client.send('Page.captureScreenshot', {
         format: 'png',
         fromSurface: true,
@@ -165,6 +172,27 @@ async function connectClient(webSocketDebuggerUrl) {
   };
 }
 
+async function waitForFlutterReady(client) {
+  const deadline = Date.now() + 20000;
+  while (Date.now() < deadline) {
+    const result = await client.send('Runtime.evaluate', {
+      expression: `(() => {
+        const root = document.querySelector('canvas, flutter-view, flt-glass-pane');
+        const rect = root && root.getBoundingClientRect ? root.getBoundingClientRect() : { width: 0, height: 0 };
+        const hasCanvas = !!document.querySelector('canvas');
+        const hasBodyChildren = !!document.body && document.body.children.length > 0;
+        return (rect.width > 0 && rect.height > 0) || hasCanvas || hasBodyChildren;
+      })()`,
+      returnByValue: true,
+    });
+
+    if (result?.result?.value === true) {
+      return;
+    }
+    await delay(250);
+  }
+}
+
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -178,4 +206,8 @@ function onceProcessExit(child) {
     child.once('exit', () => resolve());
     setTimeout(resolve, 1000);
   });
+}
+
+function slugify(route) {
+  return route.replaceAll('/', '').replace(/[^a-z0-9_-]/gi, '-') || 'slide';
 }

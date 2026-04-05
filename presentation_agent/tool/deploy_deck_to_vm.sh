@@ -11,7 +11,7 @@ SITE_DIR="${ARTIFACT_DIR}/site"
 FIREWALL_RULE="${FIREWALL_RULE:-boltbook-decks-8080}"
 INSTANCE_TAG="${INSTANCE_TAG:-boltbook-decks}"
 
-"${ROOT_DIR}/tool/capture_screenshots.sh"
+"${ROOT_DIR}/tool/review_deck.sh"
 
 EXTERNAL_IP="$(
   gcloud compute instances describe "${INSTANCE_NAME}" \
@@ -46,6 +46,8 @@ asset_base_url = sys.argv[3]
 
 manifest_path = site_dir / "manifest.json"
 run_trace_path = site_dir / "run_trace.json"
+screenshots = sorted((site_dir / "screenshots").glob("*.png"))
+relative_screenshots = [f"{asset_base_url}screenshots/{path.name}" for path in screenshots]
 
 manifest = json.loads(manifest_path.read_text())
 manifest["status"] = "completed"
@@ -55,12 +57,10 @@ manifest["artifact_urls"] = {
     "manifest": f"{asset_base_url}manifest.json",
     "run_trace": f"{asset_base_url}run_trace.json",
     "scene_plan": f"{asset_base_url}scene_plan.json",
+    "narrative_brief": f"{asset_base_url}narrative_brief.json",
+    "screenshot_critique": f"{asset_base_url}screenshot_critique.json",
 }
-manifest["screenshots"] = [
-    f"{asset_base_url}screenshots/01-title.png",
-    f"{asset_base_url}screenshots/02-pipeline.png",
-    f"{asset_base_url}screenshots/03-validation.png",
-]
+manifest["screenshots"] = relative_screenshots
 manifest["summary"] = "Сгенерирована и опубликована финальная русскоязычная презентация с обязательным сценарным планом, проверкой кадра и каноническим адресом /deck."
 manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
 
@@ -133,7 +133,9 @@ for url in \
   "${CANONICAL_URL}" \
   "${ASSET_BASE_URL}manifest.json" \
   "${ASSET_BASE_URL}run_trace.json" \
-  "${ASSET_BASE_URL}scene_plan.json"
+  "${ASSET_BASE_URL}scene_plan.json" \
+  "${ASSET_BASE_URL}narrative_brief.json" \
+  "${ASSET_BASE_URL}screenshot_critique.json"
 do
   http_code="$(curl -s -o /dev/null -w '%{http_code}' "${url}")"
   if [[ "${http_code}" != "200" ]]; then

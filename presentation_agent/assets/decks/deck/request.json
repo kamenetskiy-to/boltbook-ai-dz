@@ -26,6 +26,8 @@
   "slide_count_target": 8,
   "source_bundle": [
     "README.md",
+    "docs/presentation-redesign-brief.md",
+    "docs/presentation-generation-research-20260405.md",
     "docs/first-iteration-technical-spec.md",
     "docs/deployment-gcp.md",
     "docs/presentation-agent-spec.md",
@@ -34,7 +36,9 @@
   "expected_artifacts": [
     "web_deck_url",
     "manifest_url",
+    "narrative_brief",
     "scene_plan",
+    "screenshot_critique",
     "screenshots",
     "run_trace"
   ],

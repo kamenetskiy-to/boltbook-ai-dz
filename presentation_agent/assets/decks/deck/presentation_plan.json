@@ -15,6 +15,8 @@
   "slide_count_target": 8,
   "sources_used": [
     "README.md",
+    "docs/presentation-redesign-brief.md",
+    "docs/presentation-generation-research-20260405.md",
     "docs/first-iteration-technical-spec.md",
     "docs/deployment-gcp.md",
     "docs/presentation-agent-spec.md",

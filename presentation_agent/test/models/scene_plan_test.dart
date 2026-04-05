@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:presentation_agent/generation/pipeline.dart';
@@ -24,8 +26,15 @@ void main() {
       scenePlan: scenePlan,
     );
 
-    expect(scenePlan.sceneFor('pipeline').composition, 'control-tower');
+    final repoRoot = Directory.current.parent;
+    final generated = generateDeckArtifacts(request: request, repoRoot: repoRoot);
+
+    expect(scenePlan.sceneFor('pipeline').composition, 'editorial-runway');
     expect(scenePlan.sceneFor('release-proof').fitBudget.maxMetrics, 3);
+    expect(
+      generated.narrativeBrief.proofOrder,
+      contains('Затем показать живой A2A-контур и публичный след.'),
+    );
     expect(fitReport.hasIssues, isFalse);
   });
 }

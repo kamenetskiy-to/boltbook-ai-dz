@@ -25,11 +25,8 @@ sleep 2
 CHROME_BIN="${CHROME_BIN}" \
 SCREENSHOT_BASE_URL="http://127.0.0.1:${PORT}" \
 SCREENSHOT_OUTPUT_DIR="${SITE_DIR}/screenshots" \
+SCREENSHOT_PLAN_FILE="${SITE_DIR}/presentation_plan.json" \
 node "${ROOT_DIR}/tool/capture_screenshots.mjs"
 
-cat <<EOF
-Screenshots captured:
-  ${SITE_DIR}/screenshots/01-title.png
-  ${SITE_DIR}/screenshots/02-pipeline.png
-  ${SITE_DIR}/screenshots/03-validation.png
-EOF
+echo "Screenshots captured:"
+find "${SITE_DIR}/screenshots" -maxdepth 1 -type f -name '*.png' | sort | sed 's/^/  /'

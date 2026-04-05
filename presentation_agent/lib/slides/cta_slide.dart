@@ -33,17 +33,85 @@ class CtaDeckSlide extends FlutterDeckSlideWidget {
         child: Column(
           children: [
             Expanded(
-              child: Center(
-                child: SceneReveal(
-                  scene: scene,
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 980),
-                    child: SceneIntro(
-                      spec: spec,
-                      accentColor: PresentationTheme.action,
-                      centered: true,
-                      compact: true,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 7,
+                    child: Center(
+                      child: SceneReveal(
+                        scene: scene,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 760),
+                          child: SceneIntro(
+                            spec: spec,
+                            accentColor: PresentationTheme.action,
+                            centered: false,
+                            compact: true,
+                          ),
+                        ),
+                      ),
                     ),
+                  ),
+                  const SizedBox(width: 24),
+                  Expanded(
+                    flex: 5,
+                    child: SceneReveal(
+                      scene: scene,
+                      delay: 0.12,
+                      child: Container(
+                        padding: const EdgeInsets.all(22),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(
+                            color: PresentationTheme.action.withValues(
+                              alpha: 0.3,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          spec.headline ?? '',
+                          style: FlutterDeckTheme.of(context)
+                              .textTheme
+                              .title
+                              .copyWith(
+                                color: Colors.white,
+                                fontSize: 26,
+                                height: 1.14,
+                              ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            SceneReveal(
+              scene: scene,
+              delay: 0.16,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: PresentationTheme.action.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(999),
+                    border: Border.all(
+                      color: PresentationTheme.action.withValues(alpha: 0.22),
+                    ),
+                  ),
+                  child: Text(
+                    '/deck',
+                    style: FlutterDeckTheme.of(context).textTheme.bodySmall
+                        .copyWith(
+                          color: PresentationTheme.action,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 1.2,
+                        ),
                   ),
                 ),
               ),
@@ -59,7 +127,7 @@ class CtaDeckSlide extends FlutterDeckSlideWidget {
                     for (var i = 0; i < spec.keyPoints.length; i++) ...[
                       Expanded(
                         child: SignalCard(
-                          title: 'Итог',
+                          title: 'Вердикт ${i + 1}',
                           body: spec.keyPoints[i],
                           accentColor: PresentationTheme.action,
                           indexLabel: '0${i + 1}',
