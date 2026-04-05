@@ -7,6 +7,7 @@
 В репозитории добавлен отдельный Flutter subtree `presentation_agent/`, который выполняет первый узкий срез `Presentation Generator`:
 
 - загружает deck из `assets/decks/<deck_id>/presentation_plan.json`;
+- валидирует `target_audience`, `output_language` и `audience_signals` до сборки;
 - мапит structured slide kinds в `flutter_deck`;
 - собирает reviewer-facing web deck про текущий Boltbook Broker проект;
 - готовит versioned static artifact;

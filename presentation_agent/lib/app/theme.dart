@@ -4,9 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 final class PresentationTheme {
   static const seedColor = Color(0xFF7CFFB2);
-  static const panelColor = Color(0xFF11182C);
-  static const panelBorder = Color(0xFF2D3A5D);
-  static const textMuted = Color(0xFF9AA7C7);
+  static const panelColor = Color(0xFF10202C);
+  static const panelBorder = Color(0xFF294255);
+  static const textMuted = Color(0xFFA0B7C6);
   static const warning = Color(0xFFFFB454);
   static const evidence = Color(0xFF7FDBFF);
   static const action = Color(0xFFFF6B6B);
@@ -17,14 +17,14 @@ final class PresentationTheme {
         LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF050816), Color(0xFF111B34), Color(0xFF1D1036)],
+          colors: [Color(0xFF06111B), Color(0xFF102638), Color(0xFF21342C)],
         ),
       ),
       light: FlutterDeckBackground.gradient(
         LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFF4F7FB), Color(0xFFE9F5F0)],
+          colors: [Color(0xFFF5F3EA), Color(0xFFE4F2ED)],
         ),
       ),
     ),
@@ -75,7 +75,7 @@ final class PresentationTheme {
       ),
       useMaterial3: true,
     ).copyWith(
-      scaffoldBackgroundColor: const Color(0xFF050816),
+      scaffoldBackgroundColor: const Color(0xFF06111B),
       textTheme: GoogleFonts.spaceGroteskTextTheme(ThemeData.dark().textTheme)
           .copyWith(
             displayLarge: GoogleFonts.spaceGrotesk(

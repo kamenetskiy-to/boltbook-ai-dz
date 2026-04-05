@@ -14,6 +14,12 @@
   "delivery_preference": "public_first",
   "deck_goal": "operator_review_demo",
   "target_audience": "operators and technical reviewers",
+  "output_language": "ru",
+  "audience_signals": [
+    "проверяющ",
+    "русскоязыч",
+    "финальн"
+  ],
   "narrative_mode": "product_demo",
   "slide_count_target": 8,
   "source_bundle": [

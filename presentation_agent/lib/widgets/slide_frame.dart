@@ -46,6 +46,15 @@ class SlideFrame extends StatelessWidget {
             ),
             const SizedBox(height: 22),
             Text(
+              spec.route.replaceFirst('/', '').replaceAll('-', ' / '),
+              style: textTheme.bodySmall.copyWith(
+                color: Colors.white.withValues(alpha: 0.45),
+                letterSpacing: 1.2,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
               spec.title,
               style: textTheme.header.copyWith(color: Colors.white),
             ),
@@ -74,14 +83,20 @@ class SlideFrame extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (final point in spec.keyPoints) ...[
-              _KeyPointCard(point: point, accentColor: accentColor),
+              StaggerReveal(
+                delay: 0.18,
+                child: _KeyPointCard(point: point, accentColor: accentColor),
+              ),
               const SizedBox(height: 14),
             ],
             if (spec.evidenceRefs.isNotEmpty)
-              EvidenceCallout(
-                title: 'Evidence refs',
-                refs: spec.evidenceRefs,
-                accentColor: accentColor,
+              StaggerReveal(
+                delay: 0.28,
+                child: EvidenceCallout(
+                  title: 'Evidence refs',
+                  refs: spec.evidenceRefs,
+                  accentColor: accentColor,
+                ),
               ),
           ],
         );
@@ -104,12 +119,15 @@ class SlideFrame extends StatelessWidget {
                   const SizedBox(width: 28),
                   Expanded(
                     flex: 4,
-                    child:
-                        aside ??
-                        _VisualDirectionCard(
-                          visualDirection: spec.visualDirection,
-                          accentColor: accentColor,
-                        ),
+                    child: StaggerReveal(
+                      delay: 0.24,
+                      child:
+                          aside ??
+                          _VisualDirectionCard(
+                            visualDirection: spec.visualDirection,
+                            accentColor: accentColor,
+                          ),
+                    ),
                   ),
                 ],
               )
@@ -118,11 +136,15 @@ class SlideFrame extends StatelessWidget {
                 children: [
                   mainColumn,
                   const SizedBox(height: 28),
-                  aside ??
-                      _VisualDirectionCard(
-                        visualDirection: spec.visualDirection,
-                        accentColor: accentColor,
-                      ),
+                  StaggerReveal(
+                    delay: 0.24,
+                    child:
+                        aside ??
+                        _VisualDirectionCard(
+                          visualDirection: spec.visualDirection,
+                          accentColor: accentColor,
+                        ),
+                  ),
                 ],
               );
 
@@ -131,7 +153,7 @@ class SlideFrame extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Color(0xFF060A16), Color(0xFF0F1831), Color(0xFF130F22)],
+              colors: [Color(0xFF071019), Color(0xFF102536), Color(0xFF1F302D)],
             ),
           ),
           child: Stack(
@@ -143,23 +165,43 @@ class SlideFrame extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(72, 64, 72, 42),
-                child: TweenAnimationBuilder<double>(
-                  duration: const Duration(milliseconds: 420),
-                  tween: Tween(begin: 0.0, end: 1.0),
-                  builder: (context, value, child) => Opacity(
-                    opacity: value,
-                    child: Transform.translate(
-                      offset: Offset(0, 18 * (1 - value)),
-                      child: child,
-                    ),
-                  ),
-                  child: content,
-                ),
+                child: StaggerReveal(delay: 0, child: content),
               ),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+class StaggerReveal extends StatelessWidget {
+  const StaggerReveal({required this.child, required this.delay, super.key});
+
+  final Widget child;
+  final double delay;
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      duration: const Duration(milliseconds: 680),
+      curve: Curves.easeOutCubic,
+      tween: Tween(begin: 0.0, end: 1.0),
+      builder: (context, value, child) {
+        final progress = Interval(
+          delay,
+          1,
+          curve: Curves.easeOutCubic,
+        ).transform(value);
+        return Opacity(
+          opacity: progress,
+          child: Transform.translate(
+            offset: Offset(0, 24 * (1 - progress)),
+            child: child,
+          ),
+        );
+      },
+      child: child,
     );
   }
 }
@@ -178,9 +220,16 @@ class _KeyPointCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: PresentationTheme.panelColor.withValues(alpha: 0.96),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            accentColor.withValues(alpha: 0.08),
+            PresentationTheme.panelColor.withValues(alpha: 0.98),
+          ],
+        ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: PresentationTheme.panelBorder),
+        border: Border.all(color: accentColor.withValues(alpha: 0.2)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,7 +274,7 @@ class _VisualDirectionCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFF11182C).withValues(alpha: 0.94),
+        color: const Color(0xFF10202C).withValues(alpha: 0.94),
         borderRadius: BorderRadius.circular(28),
         border: Border.all(color: PresentationTheme.panelBorder),
       ),

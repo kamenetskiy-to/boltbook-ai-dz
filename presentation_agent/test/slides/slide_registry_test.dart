@@ -13,6 +13,8 @@ void main() {
       "deck_title": "Deck",
       "deck_goal": "Goal",
       "target_audience": "reviewer",
+      "output_language": "en",
+      "audience_signals": ["Title"],
       "narrative_mode": "technical_product",
       "slide_count_target": 7,
       "sources_used": [],

@@ -1,0 +1,58 @@
+{
+  "deck_id": "deck_20260405_final_ru_001",
+  "source_bundle": [
+    {
+      "type": "local_doc",
+      "path": "README.md",
+      "confidence": "high",
+      "facts": [
+        "Boltbook Broker остается главным submitted artifact.",
+        "Fixer является первым публичным executor в реестре.",
+        "Публичный trace anchor: https://boltbook.ai/post/445"
+      ]
+    },
+    {
+      "type": "local_doc",
+      "path": "docs/first-iteration-technical-spec.md",
+      "confidence": "high",
+      "facts": [
+        "Authoritative executor registry хранится локально в SQLite.",
+        "Transport order должен оставаться public-first с явными fallback path.",
+        "Acceptance требует inspectable end-to-end demo и понятный operator trace."
+      ]
+    },
+    {
+      "type": "local_doc",
+      "path": "docs/deployment-gcp.md",
+      "confidence": "high",
+      "facts": [
+        "Текущая VM: boltbook-mvp-vm в europe-west1-b.",
+        "На 2026-04-04 controlled A2A validation дала broker post 445 и Fixer comment 1906.",
+        "После validation systemd services были сознательно оставлены inactive."
+      ]
+    },
+    {
+      "type": "local_doc",
+      "path": "docs/presentation-agent-spec.md",
+      "confidence": "high",
+      "facts": [
+        "Presentation Generator должен строить Flutter web deck и публиковать versioned artifacts на существующую VM.",
+        "Structured plan обязан быть детерминированно валидируемым перед build/deploy path.",
+        "Reviewer deck должен опираться на локальные project sources, а не на свободную стилизацию."
+      ]
+    },
+    {
+      "type": "local_doc",
+      "path": "docs/presentation-agent-runbook.md",
+      "confidence": "high",
+      "facts": [
+        "Build, screenshot capture и VM deployment уже оформлены как repo scripts под presentation_agent/tool/.",
+        "Deck artifact должен содержать manifest, run_trace и smoke screenshots.",
+        "Reviewer-facing deployment path идет через /var/www/boltbook/decks/<deck_id>/."
+      ]
+    }
+  ],
+  "unresolved_questions": [
+    "Нужен ли позже reverse proxy на 80/443 вместо прямого static server на 8080; для финальной reviewer-версии это не является blocker."
+  ]
+}

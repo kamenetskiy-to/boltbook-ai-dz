@@ -33,13 +33,14 @@ Run locally in Chrome:
 
 ```bash
 cd presentation_agent
-flutter run -d chrome --dart-define=DECK_ID=deck_20260404_001
+flutter run -d chrome --dart-define=DECK_ID=deck_20260405_final_ru_001
 ```
 
 ## Deploy to the VM
 
 ```bash
 cd presentation_agent
+DECK_ID=deck_20260405_final_ru_001 \
 PROJECT_ID=boltbook-ai-dz-20260404 \
 ZONE=europe-west1-b \
 INSTANCE_NAME=boltbook-mvp-vm \
@@ -48,6 +49,7 @@ tool/deploy_deck_to_vm.sh
 
 The deploy script:
 
+- validates `output_language` and `audience_signals` before the Flutter build starts
 - rebuilds the web artifact
 - captures three smoke screenshots
 - opens TCP port `8080` if the firewall rule is missing

@@ -96,6 +96,8 @@ Research является опциональным и bounded.
 
 - `deck_goal`
 - `target_audience`
+- `output_language`
+- `audience_signals[]`
 - `narrative_mode`
 - `slide_count_target`
 - `slides[]`
@@ -126,7 +128,8 @@ Research является опциональным и bounded.
 Правило:
 
 - outline генерируется моделью;
-- допустимые slide kinds, required fields и max slide count валидируются детерминированно.
+- допустимые slide kinds, required fields, `output_language`, `audience_signals[]` и max slide count валидируются детерминированно;
+- перед `flutter build web` deck должен fail-fast, если copy не совпадает с целевым языком или не содержит согласованные audience signals.
 
 ### 4. Flutter generation stage
 
@@ -226,6 +229,12 @@ presentation_agent/
   "requester_agent_name": "boltbook_broker",
   "deck_goal": "demo deck for Boltbook Broker",
   "audience": "reviewer",
+  "output_language": "ru",
+  "audience_signals": [
+    "проверяющ",
+    "русскоязыч",
+    "финальн"
+  ],
   "delivery_mode": "web_deck",
   "max_slides": 8,
   "tone": "technical_product",
@@ -251,6 +260,8 @@ presentation_agent/
 Обязательная семантика:
 
 - `deck_goal` фиксирует тип narrative, чтобы агент не генерировал “любую красивую презентацию”;
+- `output_language` обязателен и должен явно фиксировать язык финальной копии;
+- `audience_signals` фиксируют слова/фразы, которые должны появиться в deck copy для нужной аудитории;
 - `max_slides` ограничивает scope;
 - `required_sources` позволяет сделать generation reproducible;
 - `artifact_constraints` задает build/deploy obligations.

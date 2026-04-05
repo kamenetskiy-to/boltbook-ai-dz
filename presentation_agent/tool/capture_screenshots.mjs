@@ -18,8 +18,8 @@ if (!outputDir) {
 
 const slides = [
   { route: '/intro', fileName: '01-title.png' },
-  { route: '/public-trace', fileName: '02-workflow.png' },
-  { route: '/next-step', fileName: '03-cta.png' },
+  { route: '/pipeline-guardrails', fileName: '02-pipeline.png' },
+  { route: '/deployment-validation', fileName: '03-validation.png' },
 ];
 
 const chromePort = 9222;

@@ -1,0 +1,13 @@
+{
+  "deck_id": "deck_20260405_final_ru_001",
+  "status": "prepared",
+  "source_count": 5,
+  "research_used": false,
+  "slide_count": 8,
+  "build_commit_or_version": "local-worktree",
+  "operator_notes": [
+    "Финальный deck contract теперь требует target_audience, output_language и audience_signals.",
+    "Сборка должна падать до flutter build, если copy не выглядит русскоязычной или не содержит audience signals.",
+    "Эта версия явно supersedes предыдущий английский reviewer deck."
+  ]
+}

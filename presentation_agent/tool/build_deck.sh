@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-DECK_ID="${DECK_ID:-deck_20260404_001}"
+DECK_ID="${DECK_ID:-deck_20260405_final_ru_001}"
 ARTIFACT_DIR="${ARTIFACT_DIR:-${ROOT_DIR}/build/decks/${DECK_ID}}"
 SITE_DIR="${ARTIFACT_DIR}/site"
 SOURCE_DIR="${ROOT_DIR}/assets/decks/${DECK_ID}"
@@ -13,6 +13,7 @@ if [[ ! -d "${SOURCE_DIR}" ]]; then
 fi
 
 pushd "${ROOT_DIR}" >/dev/null
+dart run tool/validate_deck.dart "${SOURCE_DIR}/presentation_plan.json"
 flutter build web --release --dart-define=DECK_ID="${DECK_ID}"
 popd >/dev/null
 

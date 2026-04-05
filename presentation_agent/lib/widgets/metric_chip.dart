@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presentation_agent/app/theme.dart';
 
 class MetricChip extends StatelessWidget {
   const MetricChip({required this.label, required this.value, super.key});
@@ -11,9 +12,16 @@ class MetricChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white.withValues(alpha: 0.12),
+            PresentationTheme.panelColor.withValues(alpha: 0.96),
+          ],
+        ),
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.14)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -23,7 +31,7 @@ class MetricChip extends StatelessWidget {
             value,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 24,
+              fontSize: 22,
               fontWeight: FontWeight.w700,
             ),
           ),

@@ -1,0 +1,307 @@
+{
+  "task_id": "task_20260405_presentation_final_001",
+  "executor_id": "presentation_generator",
+  "deck_id": "deck_20260405_final_ru_001",
+  "deck_title": "Boltbook Broker: финальная reviewer-презентация",
+  "deck_goal": "Финальная русскоязычная Flutter web презентация для проверяющего тестового задания: показать честный MVP, реальный proof path и исправленный pipeline deck generation.",
+  "target_audience": "русскоязычный проверяющий тестового задания",
+  "output_language": "ru",
+  "audience_signals": [
+    "проверяющ",
+    "русскоязыч",
+    "финальн"
+  ],
+  "narrative_mode": "reviewer_final",
+  "slide_count_target": 8,
+  "sources_used": [
+    "README.md",
+    "docs/first-iteration-technical-spec.md",
+    "docs/deployment-gcp.md",
+    "docs/presentation-agent-spec.md",
+    "docs/presentation-agent-runbook.md"
+  ],
+  "open_risks": [
+    "Continuous live polling остается выключенным; финальная reviewer story намеренно опирается на controlled trace и versioned deck artifact вместо широкого production intake."
+  ],
+  "asset_requests": [],
+  "slides": [
+    {
+      "slide_id": "title",
+      "kind": "title",
+      "route": "/intro",
+      "title": "Boltbook Broker",
+      "eyebrow": "ФИНАЛЬНАЯ RU-ВЕРСИЯ",
+      "subtitle": "Русскоязычная финальная Flutter web презентация для проверяющего: честный MVP, живой proof path и управляемый deployment.",
+      "headline": "Один узкий продуктовый артефакт, один реальный исполнитель и один проверяемый путь от задачи до публичного следа.",
+      "key_points": [],
+      "evidence_refs": [
+        "README.md",
+        "docs/presentation-agent-spec.md",
+        "https://boltbook.ai/post/445"
+      ],
+      "metrics": [
+        {
+          "label": "Публичное proof",
+          "value": "post 445"
+        },
+        {
+          "label": "Язык выдачи",
+          "value": "RU enforced"
+        },
+        {
+          "label": "Финальный URL",
+          "value": "34.38.33.15:8080"
+        }
+      ],
+      "visual_direction": "Глубокая сценография без шаблонного marketing look: крупный тезис, метрики-доказательства и ощущение финального reviewer artifact.",
+      "notes": "- Сразу назвать deck финальной русскоязычной версией для проверяющего.\n- Подчеркнуть, что это не пробный scaffold, а reviewer-facing deliverable."
+    },
+    {
+      "slide_id": "market-gap",
+      "kind": "problem",
+      "route": "/market-gap",
+      "title": "Платформа уже живая, но нужных маркетплейс-примитивов еще нет",
+      "eyebrow": "КОНТЕКСТ",
+      "headline": "Именно поэтому MVP не притворяется finished marketplace: он берет один путь, который уже можно доказать и проверить.",
+      "subtitle": "Для проверяющего это важнее красивой легенды: ограничения платформы прямо превращены в инженерные решения.",
+      "key_points": [
+        "Нет подтвержденного list-all-agents endpoint, поэтому discovery нельзя строить как синхронизацию полного каталога.",
+        "DM остается consent-gated каналом, значит public threads и broker-authored posts обязаны быть first-class transport path.",
+        "Социальная механика boltbook.ai уже полезна как среда сигналов, но source of truth для matching пока должен жить у брокера."
+      ],
+      "evidence_refs": [
+        "README.md",
+        "docs/boltbook-api-capabilities-audit.md",
+        "docs/first-iteration-technical-spec.md"
+      ],
+      "metrics": [
+        {
+          "label": "Discovery",
+          "value": "feed/search/manual"
+        },
+        {
+          "label": "DM reality",
+          "value": "consent-gated"
+        }
+      ],
+      "visual_direction": "Не драматизировать проблему, а показать зрелый инженерный фильтр: каждая карточка = одно реальное платформенное ограничение.",
+      "notes": "- Удерживать тон reviewer-friendly: честность важнее hype.\n- Связать ограничения платформы с локальным SQLite registry."
+    },
+    {
+      "slide_id": "artifact",
+      "kind": "solution",
+      "route": "/artifact",
+      "title": "Broker превращает социальные сигналы в исполнимый handoff",
+      "eyebrow": "АРТЕФАКТ",
+      "headline": "Финальная версия продает не идею 'когда-нибудь', а уже рабочий контур broker -> executor -> public trace.",
+      "subtitle": "Fixer остается первым реальным исполнителем, а Presentation Generator показывает, что поверх этого контура можно выпускать reviewer-grade artifacts.",
+      "key_points": [
+        "Boltbook Broker хранит portfolio и matching state локально, поэтому recommendation path остается детерминированным и объяснимым.",
+        "Fixer опубликован как настоящий executor identity, а не как synthetic placeholder для демо-скриншота.",
+        "Model Colloquium уже выделен как архитектурный seam, поэтому будущая multi-model оценка не требует перелома текущего MVP."
+      ],
+      "evidence_refs": [
+        "README.md",
+        "docs/handoff.md",
+        "docs/first-iteration-technical-spec.md"
+      ],
+      "metrics": [
+        {
+          "label": "Первый executor",
+          "value": "Fixer"
+        },
+        {
+          "label": "Source of truth",
+          "value": "SQLite"
+        },
+        {
+          "label": "Future seam",
+          "value": "Colloquium"
+        }
+      ],
+      "visual_direction": "Сделать слайд собранным и уверенным: минимум декоративного шума, максимум product proof и reviewer readability.",
+      "notes": "- Подчеркнуть, что public executor identity и внутренний Fixer MCP не смешиваются.\n- Удерживать narrative вокруг shipped artifact, а не вокруг платформенной мечты."
+    },
+    {
+      "slide_id": "runtime",
+      "kind": "architecture",
+      "route": "/runtime",
+      "title": "Система остается маленькой, но уже операционно убедительной",
+      "eyebrow": "АРХИТЕКТУРА",
+      "headline": "Два Go runtime, один shared VM, локальный trace и отдельный presentation executor дают достаточно материала для reviewer audit без архитектурной пены.",
+      "key_points": [
+        "Broker и Fixer остаются отдельными публичными identity, даже когда делят одну VM в первой итерации.",
+        "Persisted trace объясняет, что именно запускалось, что было examined, какой transport был выбран и какие side effects произошли.",
+        "Presentation Generator добавляет versioned Flutter web artifacts рядом с Go сервисами и не ломает основной runtime контур."
+      ],
+      "evidence_refs": [
+        "docs/deployment-gcp.md",
+        "docs/first-iteration-technical-spec.md",
+        "docs/presentation-agent-runbook.md"
+      ],
+      "nodes": [
+        {
+          "title": "Boltbook Broker",
+          "subtitle": "Main artifact",
+          "detail": "Intake, registry updates, matching, объяснение fit и инициирование handoff."
+        },
+        {
+          "title": "Fixer",
+          "subtitle": "Executor identity",
+          "detail": "Первый живой исполнитель, который отвечает на lead и показывает реальную исполнимость реестра."
+        },
+        {
+          "title": "SQLite trace",
+          "subtitle": "Local source of truth",
+          "detail": "Хранит portfolios, tasks, transport actions, response actions и run history для reviewer audit."
+        },
+        {
+          "title": "Model Colloquium",
+          "subtitle": "Future seam",
+          "detail": "Разделяет evaluator role и aggregation shape без давления на текущий deterministic MVP."
+        },
+        {
+          "title": "Presentation Generator",
+          "subtitle": "Reviewer artifact path",
+          "detail": "Собирает structured deck data, валидирует language/audience contract, строит Flutter web и деплоит versioned artifact."
+        }
+      ],
+      "visual_direction": "Топология должна выглядеть как инженерная схема, но оставаться читаемой за один взгляд на проекторе или в браузере.",
+      "notes": "- Это слайд про operational credibility.\n- Показать, что новый deck pipeline встроен рядом с существующей VM topology, а не изобретает второй продукт."
+    },
+    {
+      "slide_id": "pipeline-guardrails",
+      "kind": "workflow",
+      "route": "/pipeline-guardrails",
+      "title": "Pipeline теперь явно фиксирует аудиторию и язык",
+      "eyebrow": "ЗАЩИТЫ",
+      "headline": "Сбой с английской версией закрыт контрактом: без output_language, audience_signals и валидного русского корпуса сборка падает до Flutter build.",
+      "subtitle": "Для проверяющего это ключевой product fix: язык и audience больше не 'подразумеваются', а становятся обязательными входами pipeline.",
+      "key_points": [
+        "В request и presentation_plan добавлены обязательные поля output_language и audience_signals alongside target_audience.",
+        "Validator проверяет deck copy детерминированно: русскоязычный корпус должен доминировать, а audience signals обязаны реально присутствовать в тексте.",
+        "Build, screenshots и deploy больше не стартуют, если финальная копия не соответствует reviewer contract."
+      ],
+      "evidence_refs": [
+        "docs/presentation-agent-spec.md",
+        "docs/presentation-agent-request-example.json",
+        "presentation_agent/tool/validate_deck.dart"
+      ],
+      "workflow_steps": [
+        {
+          "title": "Собрать source bundle",
+          "detail": "README и ключевые docs остаются первичным источником фактов для русскоязычного reviewer narrative."
+        },
+        {
+          "title": "Собрать plan с contract fields",
+          "detail": "Deck обязан задать target_audience, output_language и audience_signals до любого build/deploy шага."
+        },
+        {
+          "title": "Fail-fast validation",
+          "detail": "Validator останавливает pipeline, если копия не выглядит русскоязычной или в ней не отражена audience contract semantics."
+        },
+        {
+          "title": "Flutter build и smoke screenshots",
+          "detail": "Только валидный plan попадает в web build и в headless screenshot capture path."
+        },
+        {
+          "title": "Versioned deploy на VM",
+          "detail": "После публикации manifest и run_trace получают финальные artifact URLs и reviewer screenshots."
+        }
+      ],
+      "visual_direction": "Этот слайд должен ощущаться как control plane: вертикальный flow, четкие шаги, сильный акцент на fail-fast discipline.",
+      "notes": "- Это центральный bug-fix slide.\n- Называть проблему напрямую: прошлый deck был английским и поэтому не годился как финальный deliverable."
+    },
+    {
+      "slide_id": "reviewer-proof",
+      "kind": "evidence",
+      "route": "/reviewer-proof",
+      "title": "Финальный narrative собран под проверяющего, а не под случайного зрителя",
+      "eyebrow": "ДОКАЗУЕМОСТЬ",
+      "headline": "Структура deck перестроена под reviewer audit: контекст платформы, shipped artifact, runtime, guardrails, deploy и четкий verdict.",
+      "subtitle": "Это и есть отличие финальной версии от английского proof-of-pipeline артефакта.",
+      "key_points": [
+        "Вся копия переведена на русский и пишет из позиции 'что увидит проверяющий', а не из позиции generic startup pitch.",
+        "Новая логика слайдов убирает ощущение scaffold: сначала ограничения среды, затем shipped artifact, потом guardrails и deployment evidence.",
+        "Отдельная финальная версия deck явно supersedes предыдущий английский artifact и маркирована новым versioned deck_id."
+      ],
+      "evidence_refs": [
+        "presentation_agent/assets/decks/deck_20260405_final_ru_001/presentation_plan.json",
+        "presentation_agent/assets/decks/deck_20260405_final_ru_001/manifest.json",
+        "presentation_agent/assets/decks/deck_20260404_001/presentation_plan.json"
+      ],
+      "metrics": [
+        {
+          "label": "Слайдов",
+          "value": "8"
+        },
+        {
+          "label": "Validation",
+          "value": "3 screenshots"
+        },
+        {
+          "label": "Supersedes",
+          "value": "English deck"
+        }
+      ],
+      "visual_direction": "Нужен trust slide без визуального мусора: proof chips, короткие reviewer claims и один четкий итог.",
+      "notes": "- Сравнение с английской версией должно быть прямым, но без лишней драмы.\n- Подчеркнуть reviewer intent и финальный статус."
+    },
+    {
+      "slide_id": "deployment-validation",
+      "kind": "evidence",
+      "route": "/deployment-validation",
+      "title": "Финальный artifact публикуется как отдельная versioned deck-сборка",
+      "eyebrow": "ДЕПЛОЙ И ВАЛИДАЦИЯ",
+      "headline": "Reviewer path отделен от прошлой версии и живет по адресу http://34.38.33.15:8080/decks/deck_20260405_final_ru_001/.",
+      "subtitle": "Manifest и run_trace должны после deploy зафиксировать web URL, screenshot URLs и финальный completion status.",
+      "key_points": [
+        "Артефакт деплоится как /decks/deck_20260405_final_ru_001/ и не перезаписывает предыдущий английский dataset.",
+        "Smoke validation снимает title slide, pipeline guardrails и финальный validation slide, чтобы reviewer видел не только build success, но и визуальный результат.",
+        "Deployment script дописывает artifact URLs обратно в manifest и run_trace, замыкая reviewer-facing proof chain."
+      ],
+      "evidence_refs": [
+        "presentation_agent/tool/deploy_deck_to_vm.sh",
+        "presentation_agent/tool/capture_screenshots.sh",
+        "docs/deployment-gcp.md"
+      ],
+      "metrics": [
+        {
+          "label": "Web URL",
+          "value": "34.38.33.15:8080"
+        },
+        {
+          "label": "Artifact path",
+          "value": "/decks/deck_20260405_final_ru_001/"
+        },
+        {
+          "label": "Reviewer proof",
+          "value": "manifest + screenshots"
+        }
+      ],
+      "visual_direction": "Этот экран должен выглядеть как release dashboard: deployment facts, URL и validation artifacts без инфографической суеты.",
+      "notes": "- Если показывать live, открыть именно этот route перед CTA.\n- Подсветить, что reviewer получает отдельный, versioned и inspectable artifact."
+    },
+    {
+      "slide_id": "decision",
+      "kind": "cta",
+      "route": "/decision",
+      "title": "Почему это уже похоже на финальную submission-версию",
+      "eyebrow": "VERDICT",
+      "headline": "Проверяющий получает не обещание, а работающий artifact: русскоязычный deck, live proof, reproducible build/deploy и контракт, который не даст снова отгрузить английскую копию.",
+      "subtitle": "Следующий шаг уже не в том, чтобы 'доделать презентацию', а в том, чтобы расширять executor path без потери этой инженерной дисциплины.",
+      "key_points": [
+        "Boltbook Broker показан как честный MVP с реальным публичным следом, а не как mock marketplace story.",
+        "Presentation pipeline теперь знает, для кого и на каком языке он должен выпустить финальный deliverable.",
+        "Эта deck-сборка является финальной reviewer-facing версией и явно supersedes прошлый английский артефакт."
+      ],
+      "evidence_refs": [
+        "https://boltbook.ai/post/445",
+        "presentation_agent/tool/validate_deck.dart",
+        "presentation_agent/tool/deploy_deck_to_vm.sh"
+      ],
+      "visual_direction": "Закрыть deck как уверенное инженерное решение: крупный verdict, минимум текста вокруг и ясный финальный смысл.",
+      "notes": "- Финальный тезис должен звучать как reviewer verdict, а не как roadmap.\n- Зафиксировать, что английский deck больше не является кандидатом на submission."
+    }
+  ]
+}

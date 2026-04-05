@@ -35,7 +35,7 @@ class TitleDeckSlide extends FlutterDeckSlideWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF091223), Color(0xFF152548), Color(0xFF2C1647)],
+            colors: [Color(0xFF09141D), Color(0xFF173248), Color(0xFF2A3E33)],
           ),
         ),
         child: Stack(
@@ -60,84 +60,113 @@ class TitleDeckSlide extends FlutterDeckSlideWidget {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(80, 72, 80, 56),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    spec.eyebrow ?? plan.targetAudience.toUpperCase(),
-                    style: textTheme.bodyMedium.copyWith(
-                      color: PresentationTheme.seedColor,
-                      letterSpacing: 2,
-                      fontWeight: FontWeight.w700,
-                    ),
+              child: TweenAnimationBuilder<double>(
+                duration: const Duration(milliseconds: 820),
+                tween: Tween(begin: 0.0, end: 1.0),
+                curve: Curves.easeOutCubic,
+                builder: (context, value, child) => Opacity(
+                  opacity: value,
+                  child: Transform.translate(
+                    offset: Offset(0, 26 * (1 - value)),
+                    child: child,
                   ),
-                  const Spacer(),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 980),
-                    child: Text(
-                      spec.title,
-                      style: textTheme.display.copyWith(color: Colors.white),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 980),
-                    child: Text(
-                      spec.subtitle ?? plan.deckGoal,
-                      style: textTheme.bodyLarge.copyWith(
-                        color: Colors.white.withValues(alpha: 0.82),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      spec.eyebrow ?? plan.targetAudience.toUpperCase(),
+                      style: textTheme.bodyMedium.copyWith(
+                        color: PresentationTheme.seedColor,
+                        letterSpacing: 2,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 32),
-                  Wrap(
-                    spacing: 14,
-                    runSpacing: 14,
-                    children: [
-                      for (final metric in spec.metrics)
-                        MetricChip(label: metric.label, value: metric.value),
-                    ],
-                  ),
-                  const SizedBox(height: 36),
-                  Container(
-                    width: 720,
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.07),
-                      borderRadius: BorderRadius.circular(28),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.08),
+                    const SizedBox(height: 14),
+                    Text(
+                      plan.targetAudience,
+                      style: textTheme.bodySmall.copyWith(
+                        color: Colors.white.withValues(alpha: 0.54),
+                        letterSpacing: 1.1,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    child: Text(
-                      spec.headline ?? '',
-                      style: textTheme.header.copyWith(
-                        color: Colors.white,
-                        height: 1.15,
+                    const Spacer(),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 980),
+                      child: Text(
+                        spec.title,
+                        style: textTheme.display.copyWith(color: Colors.white),
                       ),
                     ),
-                  ),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      Text(
-                        'deck_id: ${plan.deckId}',
-                        style: textTheme.bodySmall.copyWith(
-                          color: Colors.white.withValues(alpha: 0.72),
-                          fontWeight: FontWeight.w700,
+                    const SizedBox(height: 24),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 980),
+                      child: Text(
+                        spec.subtitle ?? plan.deckGoal,
+                        style: textTheme.bodyLarge.copyWith(
+                          color: Colors.white.withValues(alpha: 0.82),
                         ),
                       ),
-                      const SizedBox(width: 18),
-                      Text(
-                        'executor: ${plan.executorId}',
-                        style: textTheme.bodySmall.copyWith(
-                          color: Colors.white.withValues(alpha: 0.72),
-                          fontWeight: FontWeight.w700,
+                    ),
+                    const SizedBox(height: 32),
+                    Wrap(
+                      spacing: 14,
+                      runSpacing: 14,
+                      children: [
+                        for (final metric in spec.metrics)
+                          MetricChip(label: metric.label, value: metric.value),
+                      ],
+                    ),
+                    const SizedBox(height: 36),
+                    Container(
+                      width: 760,
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.07),
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.08),
                         ),
                       ),
-                    ],
-                  ),
-                ],
+                      child: Text(
+                        spec.headline ?? '',
+                        style: textTheme.header.copyWith(
+                          color: Colors.white,
+                          height: 1.15,
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    Row(
+                      children: [
+                        Text(
+                          'deck_id: ${plan.deckId}',
+                          style: textTheme.bodySmall.copyWith(
+                            color: Colors.white.withValues(alpha: 0.72),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(width: 18),
+                        Text(
+                          'language: ${plan.outputLanguage.toUpperCase()}',
+                          style: textTheme.bodySmall.copyWith(
+                            color: Colors.white.withValues(alpha: 0.72),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(width: 18),
+                        Text(
+                          'executor: ${plan.executorId}',
+                          style: textTheme.bodySmall.copyWith(
+                            color: Colors.white.withValues(alpha: 0.72),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

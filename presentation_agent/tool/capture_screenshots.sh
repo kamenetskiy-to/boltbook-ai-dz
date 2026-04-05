@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-DECK_ID="${DECK_ID:-deck_20260404_001}"
+DECK_ID="${DECK_ID:-deck_20260405_final_ru_001}"
 ARTIFACT_DIR="${ARTIFACT_DIR:-${ROOT_DIR}/build/decks/${DECK_ID}}"
 SITE_DIR="${ARTIFACT_DIR}/site"
 PORT="${PORT:-8123}"
@@ -30,6 +30,6 @@ node "${ROOT_DIR}/tool/capture_screenshots.mjs"
 cat <<EOF
 Screenshots captured:
   ${SITE_DIR}/screenshots/01-title.png
-  ${SITE_DIR}/screenshots/02-workflow.png
-  ${SITE_DIR}/screenshots/03-cta.png
+  ${SITE_DIR}/screenshots/02-pipeline.png
+  ${SITE_DIR}/screenshots/03-validation.png
 EOF

@@ -26,3 +26,7 @@ flutter:
     - assets/decks/deck_20260404_001/manifest.json
     - assets/decks/deck_20260404_001/run_trace.json
     - assets/decks/deck_20260404_001/sources.json
+    - assets/decks/deck_20260405_final_ru_001/presentation_plan.json
+    - assets/decks/deck_20260405_final_ru_001/manifest.json
+    - assets/decks/deck_20260405_final_ru_001/run_trace.json
+    - assets/decks/deck_20260405_final_ru_001/sources.json

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-DECK_ID="${DECK_ID:-deck_20260404_001}"
+DECK_ID="${DECK_ID:-deck_20260405_final_ru_001}"
 PROJECT_ID="${PROJECT_ID:-boltbook-ai-dz-20260404}"
 ZONE="${ZONE:-europe-west1-b}"
 INSTANCE_NAME="${INSTANCE_NAME:-boltbook-mvp-vm}"
@@ -53,10 +53,10 @@ manifest["artifact_urls"] = {
 }
 manifest["screenshots"] = [
     f"{base_url}screenshots/01-title.png",
-    f"{base_url}screenshots/02-workflow.png",
-    f"{base_url}screenshots/03-cta.png",
+    f"{base_url}screenshots/02-pipeline.png",
+    f"{base_url}screenshots/03-validation.png",
 ]
-manifest["summary"] = "Generated and deployed a reviewer-facing Flutter web deck with validation screenshots."
+manifest["summary"] = "Generated and deployed the final Russian reviewer-facing Flutter web deck with validation screenshots."
 manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
 
 run_trace = json.loads(run_trace_path.read_text())
