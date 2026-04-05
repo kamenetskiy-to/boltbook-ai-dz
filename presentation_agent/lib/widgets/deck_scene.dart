@@ -125,12 +125,14 @@ class SceneIntro extends StatelessWidget {
     required this.spec,
     required this.accentColor,
     this.centered = false,
+    this.compact = false,
     super.key,
   });
 
   final SlideSpec spec;
   final Color accentColor;
   final bool centered;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +145,10 @@ class SceneIntro extends StatelessWidget {
       crossAxisAlignment: alignment,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          padding: EdgeInsets.symmetric(
+            horizontal: compact ? 14 : 16,
+            vertical: compact ? 8 : 10,
+          ),
           decoration: BoxDecoration(
             color: accentColor.withValues(alpha: 0.14),
             borderRadius: BorderRadius.circular(999),
@@ -159,30 +164,37 @@ class SceneIntro extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 18),
+        SizedBox(height: compact ? 14 : 18),
         Text(
           spec.title,
           textAlign: centered ? TextAlign.center : TextAlign.start,
-          style: textTheme.header.copyWith(color: Colors.white),
+          style: textTheme.header.copyWith(
+            color: Colors.white,
+            fontSize: compact ? 26 : null,
+            height: compact ? 1.08 : null,
+          ),
         ),
         if (spec.headline != null) ...[
-          const SizedBox(height: 18),
+          SizedBox(height: compact ? 14 : 18),
           Text(
             spec.headline!,
             textAlign: centered ? TextAlign.center : TextAlign.start,
             style: textTheme.title.copyWith(
               color: Colors.white.withValues(alpha: 0.94),
-              height: 1.12,
+              fontSize: compact ? 20 : null,
+              height: compact ? 1.18 : 1.12,
             ),
           ),
         ],
         if (spec.subtitle != null) ...[
-          const SizedBox(height: 16),
+          SizedBox(height: compact ? 12 : 16),
           Text(
             spec.subtitle!,
             textAlign: centered ? TextAlign.center : TextAlign.start,
             style: textTheme.bodyLarge.copyWith(
               color: Colors.white.withValues(alpha: 0.8),
+              fontSize: compact ? 18 : null,
+              height: compact ? 1.24 : null,
             ),
           ),
         ],
@@ -248,6 +260,7 @@ class SignalCard extends StatelessWidget {
     required this.body,
     required this.accentColor,
     this.indexLabel,
+    this.compact = false,
     super.key,
   });
 
@@ -255,13 +268,14 @@ class SignalCard extends StatelessWidget {
   final String body;
   final Color accentColor;
   final String? indexLabel;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = FlutterDeckTheme.of(context).textTheme;
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(compact ? 16 : 20),
       decoration: BoxDecoration(
         color: PresentationTheme.panelColor.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(26),
@@ -287,14 +301,23 @@ class SignalCard extends StatelessWidget {
                 letterSpacing: 1.2,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: compact ? 6 : 8),
           ],
-          Text(title, style: textTheme.title.copyWith(color: Colors.white)),
-          const SizedBox(height: 10),
+          Text(
+            title,
+            style: textTheme.title.copyWith(
+              color: Colors.white,
+              fontSize: compact ? 18 : null,
+              height: compact ? 1.08 : null,
+            ),
+          ),
+          SizedBox(height: compact ? 8 : 10),
           Text(
             body,
             style: textTheme.bodyMedium.copyWith(
               color: Colors.white.withValues(alpha: 0.8),
+              fontSize: compact ? 15 : null,
+              height: compact ? 1.2 : null,
             ),
           ),
         ],

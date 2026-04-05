@@ -11,6 +11,7 @@
 - строит отдельный `scene_plan.json` до написания финальной копии;
 - генерирует итоговый `presentation_plan.json` после сценического планирования;
 - валидирует `target_audience`, `output_language`, `audience_signals` и бюджеты вместимости каждого кадра до сборки;
+- прогоняет отдельный widget-level регресс по канонической колоде на вьюпорте `1512x982`, чтобы ловить реальные overflow до релиза;
 - мапит structured slide kinds в scene-aware Flutter layouts;
 - собирает reviewer-facing web deck про текущий Boltbook Broker проект;
 - готовит canonical static artifact;

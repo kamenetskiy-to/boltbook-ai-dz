@@ -59,54 +59,84 @@ class TitleDeckSlide extends FlutterDeckSlideWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const Spacer(),
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 980),
-                child: Text(
-                  spec.title,
-                  style: textTheme.display.copyWith(color: Colors.white),
+              const SizedBox(height: 28),
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 7,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 760),
+                            child: Text(
+                              spec.title,
+                              style: textTheme.display.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 22),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 760),
+                            child: Text(
+                              spec.subtitle ?? plan.deckGoal,
+                              style: textTheme.bodyLarge.copyWith(
+                                color: Colors.white.withValues(alpha: 0.82),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          Wrap(
+                            spacing: 12,
+                            runSpacing: 12,
+                            children: [
+                              for (final metric in spec.metrics)
+                                MetricChip(
+                                  label: metric.label,
+                                  value: metric.value,
+                                  compact: true,
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 28),
+                    Expanded(
+                      flex: 5,
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Container(
+                          constraints: const BoxConstraints(maxWidth: 560),
+                          padding: const EdgeInsets.all(22),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.07),
+                            borderRadius: BorderRadius.circular(28),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.08),
+                            ),
+                          ),
+                          child: Text(
+                            spec.headline ?? '',
+                            style: textTheme.title.copyWith(
+                              color: Colors.white,
+                              fontSize: 24,
+                              height: 1.18,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 24),
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 980),
-                child: Text(
-                  spec.subtitle ?? plan.deckGoal,
-                  style: textTheme.bodyLarge.copyWith(
-                    color: Colors.white.withValues(alpha: 0.82),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 20),
               Wrap(
-                spacing: 14,
-                runSpacing: 14,
-                children: [
-                  for (final metric in spec.metrics)
-                    MetricChip(label: metric.label, value: metric.value),
-                ],
-              ),
-              const SizedBox(height: 36),
-              Container(
-                width: 760,
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.07),
-                  borderRadius: BorderRadius.circular(28),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.08),
-                  ),
-                ),
-                child: Text(
-                  spec.headline ?? '',
-                  style: textTheme.header.copyWith(
-                    color: Colors.white,
-                    height: 1.15,
-                  ),
-                ),
-              ),
-              const Spacer(),
-              Row(
+                spacing: 18,
+                runSpacing: 8,
                 children: [
                   Text(
                     'deck_id: ${plan.deckId}',
@@ -115,7 +145,6 @@ class TitleDeckSlide extends FlutterDeckSlideWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(width: 18),
                   Text(
                     'language: ${plan.outputLanguage.toUpperCase()}',
                     style: textTheme.bodySmall.copyWith(
@@ -123,7 +152,6 @@ class TitleDeckSlide extends FlutterDeckSlideWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(width: 18),
                   Text(
                     'executor: ${plan.executorId}',
                     style: textTheme.bodySmall.copyWith(

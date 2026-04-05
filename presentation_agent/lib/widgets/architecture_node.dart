@@ -7,20 +7,21 @@ class ArchitectureNode extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.detail,
+    this.compact = false,
     super.key,
   });
 
   final String title;
   final String subtitle;
   final String detail;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = FlutterDeckTheme.of(context).textTheme;
 
     return Container(
-      width: 260,
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(compact ? 16 : 20),
       decoration: BoxDecoration(
         color: PresentationTheme.panelColor.withValues(alpha: 0.96),
         borderRadius: BorderRadius.circular(26),
@@ -43,13 +44,22 @@ class ArchitectureNode extends StatelessWidget {
               fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 8),
-          Text(title, style: textTheme.title.copyWith(color: Colors.white)),
-          const SizedBox(height: 12),
+          SizedBox(height: compact ? 6 : 8),
+          Text(
+            title,
+            style: textTheme.title.copyWith(
+              color: Colors.white,
+              fontSize: compact ? 20 : null,
+              height: compact ? 1.08 : null,
+            ),
+          ),
+          SizedBox(height: compact ? 10 : 12),
           Text(
             detail,
             style: textTheme.bodyMedium.copyWith(
               color: Colors.white.withValues(alpha: 0.78),
+              fontSize: compact ? 15 : null,
+              height: compact ? 1.2 : null,
             ),
           ),
         ],

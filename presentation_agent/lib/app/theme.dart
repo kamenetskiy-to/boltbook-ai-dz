@@ -79,37 +79,37 @@ final class PresentationTheme {
       textTheme: GoogleFonts.spaceGroteskTextTheme(ThemeData.dark().textTheme)
           .copyWith(
             displayLarge: GoogleFonts.spaceGrotesk(
-              fontSize: 66,
+              fontSize: 60,
               fontWeight: FontWeight.w700,
-              letterSpacing: -2.5,
-              height: 0.95,
+              letterSpacing: -2.2,
+              height: 0.96,
             ),
             displayMedium: GoogleFonts.spaceGrotesk(
-              fontSize: 52,
+              fontSize: 46,
               fontWeight: FontWeight.w700,
-              letterSpacing: -2,
+              letterSpacing: -1.8,
             ),
             headlineMedium: GoogleFonts.spaceGrotesk(
-              fontSize: 34,
+              fontSize: 30,
               fontWeight: FontWeight.w700,
-              height: 1.05,
+              height: 1.08,
             ),
             titleLarge: GoogleFonts.spaceGrotesk(
-              fontSize: 26,
+              fontSize: 22,
               fontWeight: FontWeight.w700,
             ),
             bodyLarge: GoogleFonts.ibmPlexSans(
-              fontSize: 24,
+              fontSize: 21,
               fontWeight: FontWeight.w500,
-              height: 1.35,
+              height: 1.3,
             ),
             bodyMedium: GoogleFonts.ibmPlexSans(
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: FontWeight.w500,
-              height: 1.35,
+              height: 1.28,
             ),
             labelLarge: GoogleFonts.ibmPlexSans(
-              fontSize: 16,
+              fontSize: 15,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.4,
             ),

@@ -2,15 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:presentation_agent/app/theme.dart';
 
 class MetricChip extends StatelessWidget {
-  const MetricChip({required this.label, required this.value, super.key});
+  const MetricChip({
+    required this.label,
+    required this.value,
+    this.compact = false,
+    super.key,
+  });
 
   final String label;
   final String value;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
+    final valueStyle = TextStyle(
+      color: Colors.white,
+      fontSize: compact ? 18 : 20,
+      fontWeight: FontWeight.w700,
+      height: compact ? 1.1 : 1.15,
+    );
+    final labelStyle = TextStyle(
+      color: Colors.white.withValues(alpha: 0.7),
+      fontSize: compact ? 12 : 13,
+      fontWeight: FontWeight.w600,
+      height: 1.2,
+    );
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      constraints: BoxConstraints(minWidth: compact ? 140 : 156),
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 14 : 16,
+        vertical: compact ? 12 : 14,
+      ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -27,23 +50,9 @@ class MetricChip extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.7),
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          Text(value, style: valueStyle),
+          SizedBox(height: compact ? 3 : 4),
+          Text(label, style: labelStyle),
         ],
       ),
     );

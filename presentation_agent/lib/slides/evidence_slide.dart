@@ -40,15 +40,16 @@ class EvidenceDeckSlide extends FlutterDeckSlideWidget {
               child: SceneIntro(
                 spec: spec,
                 accentColor: PresentationTheme.evidence,
+                compact: true,
               ),
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: 20),
             Expanded(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    flex: 5,
+                    flex: 4,
                     child: SceneReveal(
                       scene: scene,
                       delay: 0.14,
@@ -60,14 +61,15 @@ class EvidenceDeckSlide extends FlutterDeckSlideWidget {
                             MetricChip(
                               label: metric.label,
                               value: metric.value,
+                              compact: true,
                             ),
                         ],
                       ),
                     ),
                   ),
-                  const SizedBox(width: 24),
+                  const SizedBox(width: 18),
                   Expanded(
-                    flex: 7,
+                    flex: 6,
                     child: Column(
                       children: [
                         for (var i = 0; i < spec.keyPoints.length; i++) ...[
@@ -78,23 +80,27 @@ class EvidenceDeckSlide extends FlutterDeckSlideWidget {
                               title: 'Подтверждение',
                               body: spec.keyPoints[i],
                               accentColor: PresentationTheme.evidence,
+                              compact: true,
                             ),
                           ),
-                          const SizedBox(height: 14),
+                          if (i + 1 < spec.keyPoints.length)
+                            const SizedBox(height: 10),
                         ],
-                        SceneReveal(
-                          scene: scene,
-                          delay: 0.28,
-                          child: EvidenceCallout(
-                            title: 'Ссылки на доказательства',
-                            refs: spec.evidenceRefs,
-                            accentColor: PresentationTheme.evidence,
-                          ),
-                        ),
                       ],
                     ),
                   ),
                 ],
+              ),
+            ),
+            const SizedBox(height: 14),
+            SceneReveal(
+              scene: scene,
+              delay: 0.28,
+              child: EvidenceCallout(
+                title: 'Ссылки на доказательства',
+                refs: spec.evidenceRefs,
+                accentColor: PresentationTheme.evidence,
+                compact: true,
               ),
             ),
           ],

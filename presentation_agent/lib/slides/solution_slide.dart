@@ -32,65 +32,75 @@ class SolutionDeckSlide extends FlutterDeckSlideWidget {
       builder: (context) => SceneShell(
         scene: scene,
         accentColor: PresentationTheme.seedColor,
-        child: Row(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SceneReveal(
+              scene: scene,
+              child: SceneIntro(
+                spec: spec,
+                accentColor: PresentationTheme.seedColor,
+                compact: true,
+              ),
+            ),
+            const SizedBox(height: 20),
             Expanded(
-              flex: 7,
-              child: Column(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SceneReveal(
-                    scene: scene,
-                    child: SceneIntro(
-                      spec: spec,
-                      accentColor: PresentationTheme.seedColor,
+                  Expanded(
+                    flex: 4,
+                    child: SceneReveal(
+                      scene: scene,
+                      delay: 0.16,
+                      child: Wrap(
+                        spacing: 12,
+                        runSpacing: 12,
+                        children: [
+                          for (final metric in spec.metrics)
+                            MetricChip(
+                              label: metric.label,
+                              value: metric.value,
+                              compact: true,
+                            ),
+                        ],
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 26),
-                  SceneReveal(
-                    scene: scene,
-                    delay: 0.16,
-                    child: Wrap(
-                      spacing: 12,
-                      runSpacing: 12,
+                  const SizedBox(width: 20),
+                  Expanded(
+                    flex: 6,
+                    child: Column(
                       children: [
-                        for (final metric in spec.metrics)
-                          MetricChip(label: metric.label, value: metric.value),
+                        for (var i = 0; i < spec.keyPoints.length; i++) ...[
+                          SceneReveal(
+                            scene: scene,
+                            delay: 0.18 + (i * 0.08),
+                            child: SignalCard(
+                              title: 'Опорный тезис',
+                              body: spec.keyPoints[i],
+                              accentColor: PresentationTheme.seedColor,
+                              compact: true,
+                            ),
+                          ),
+                          if (i + 1 < spec.keyPoints.length)
+                            const SizedBox(height: 12),
+                        ],
                       ],
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-                  SceneReveal(
-                    scene: scene,
-                    delay: 0.22,
-                    child: EvidenceCallout(
-                      title: 'Доказательства',
-                      refs: spec.evidenceRefs,
-                      accentColor: PresentationTheme.seedColor,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 26),
-            Expanded(
-              flex: 6,
-              child: Column(
-                children: [
-                  for (var i = 0; i < spec.keyPoints.length; i++) ...[
-                    SceneReveal(
-                      scene: scene,
-                      delay: 0.18 + (i * 0.08),
-                      child: SignalCard(
-                        title: 'Опорный тезис',
-                        body: spec.keyPoints[i],
-                        accentColor: PresentationTheme.seedColor,
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                  ],
-                ],
+            const SizedBox(height: 14),
+            SceneReveal(
+              scene: scene,
+              delay: 0.24,
+              child: EvidenceCallout(
+                title: 'Доказательства',
+                refs: spec.evidenceRefs,
+                accentColor: PresentationTheme.seedColor,
+                compact: true,
               ),
             ),
           ],

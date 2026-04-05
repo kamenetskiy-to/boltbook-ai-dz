@@ -32,40 +32,47 @@ class CtaDeckSlide extends FlutterDeckSlideWidget {
         accentColor: PresentationTheme.action,
         child: Column(
           children: [
-            const Spacer(),
-            SceneReveal(
-              scene: scene,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1080),
-                child: SceneIntro(
-                  spec: spec,
-                  accentColor: PresentationTheme.action,
-                  centered: true,
+            Expanded(
+              child: Center(
+                child: SceneReveal(
+                  scene: scene,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 980),
+                    child: SceneIntro(
+                      spec: spec,
+                      accentColor: PresentationTheme.action,
+                      centered: true,
+                      compact: true,
+                    ),
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: 20),
             SceneReveal(
               scene: scene,
               delay: 0.18,
-              child: Row(
-                children: [
-                  for (var i = 0; i < spec.keyPoints.length; i++) ...[
-                    Expanded(
-                      child: SignalCard(
-                        title: 'Итог',
-                        body: spec.keyPoints[i],
-                        accentColor: PresentationTheme.action,
-                        indexLabel: '0${i + 1}',
+              child: SizedBox(
+                height: 170,
+                child: Row(
+                  children: [
+                    for (var i = 0; i < spec.keyPoints.length; i++) ...[
+                      Expanded(
+                        child: SignalCard(
+                          title: 'Итог',
+                          body: spec.keyPoints[i],
+                          accentColor: PresentationTheme.action,
+                          indexLabel: '0${i + 1}',
+                          compact: true,
+                        ),
                       ),
-                    ),
-                    if (i + 1 < spec.keyPoints.length)
-                      const SizedBox(width: 16),
+                      if (i + 1 < spec.keyPoints.length)
+                        const SizedBox(width: 16),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
-            const Spacer(),
           ],
         ),
       ),

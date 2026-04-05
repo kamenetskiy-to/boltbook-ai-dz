@@ -7,6 +7,7 @@ First narrow Flutter web executor slice for the `Presentation Generator` spec.
 - loads a generation request from `assets/decks/<deck_id>/request.json`
 - builds `sources.json`, `scene_plan.json`, and the final `presentation_plan.json`
 - validates language, audience signals, and fit budgets before `flutter build web`
+- runs a widget-level fit regression at `1512x982` to catch slide overflows before release
 - maps slide kinds to scene-aware Flutter layouts instead of one repeated split template
 - captures smoke screenshots with headless Chrome
 - publishes the reviewer-facing deck to the canonical public URL `http://34.38.33.15:8080/deck`
@@ -52,6 +53,7 @@ The deploy script:
 
 - regenerates the deck from the request each time
 - validates `output_language`, `audience_signals`, and fit budgets before the Flutter build starts
+- rechecks that every canonical slide renders without overflow at `1512x982`
 - rebuilds the web artifact
 - captures three smoke screenshots
 - opens TCP port `8080` if the firewall rule is missing

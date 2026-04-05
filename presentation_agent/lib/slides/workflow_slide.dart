@@ -31,62 +31,72 @@ class WorkflowDeckSlide extends FlutterDeckSlideWidget {
       builder: (context) => SceneShell(
         scene: scene,
         accentColor: PresentationTheme.evidence,
-        child: Row(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              flex: 5,
-              child: SceneReveal(
-                scene: scene,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SceneIntro(
-                      spec: spec,
-                      accentColor: PresentationTheme.evidence,
-                    ),
-                    const SizedBox(height: 18),
-                    for (var i = 0; i < spec.keyPoints.length; i++) ...[
-                      SignalCard(
-                        title: 'Принцип ${i + 1}',
-                        body: spec.keyPoints[i],
-                        accentColor: PresentationTheme.evidence,
-                      ),
-                      const SizedBox(height: 12),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(width: 24),
-            Expanded(
-              flex: 7,
-              child: Column(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: ListView(
-                      physics: const NeverScrollableScrollPhysics(),
+                    flex: 5,
+                    child: SceneReveal(
+                      scene: scene,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SceneIntro(
+                            spec: spec,
+                            accentColor: PresentationTheme.evidence,
+                            compact: true,
+                          ),
+                          const SizedBox(height: 14),
+                          for (var i = 0; i < spec.keyPoints.length; i++) ...[
+                            SignalCard(
+                              title: 'Принцип ${i + 1}',
+                              body: spec.keyPoints[i],
+                              accentColor: PresentationTheme.evidence,
+                              compact: true,
+                            ),
+                            if (i + 1 < spec.keyPoints.length)
+                              const SizedBox(height: 10),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    flex: 7,
+                    child: Column(
                       children: [
                         for (
                           var index = 0;
                           index < spec.workflowSteps.length;
                           index++
                         ) ...[
-                          SceneReveal(
-                            scene: scene,
-                            delay: 0.1 + (index * 0.07),
-                            child: _WorkflowStepCard(
-                              index: index + 1,
-                              title: spec.workflowSteps[index].title,
-                              detail: spec.workflowSteps[index].detail,
+                          Expanded(
+                            child: SceneReveal(
+                              scene: scene,
+                              delay: 0.1 + (index * 0.07),
+                              child: _WorkflowStepCard(
+                                index: index + 1,
+                                title: spec.workflowSteps[index].title,
+                                detail: spec.workflowSteps[index].detail,
+                                compact: true,
+                              ),
                             ),
                           ),
                           if (index + 1 < spec.workflowSteps.length)
                             Padding(
-                              padding: const EdgeInsets.only(left: 26),
+                              padding: const EdgeInsets.only(
+                                left: 22,
+                                top: 6,
+                                bottom: 6,
+                              ),
                               child: Container(
                                 width: 2,
-                                height: 18,
+                                height: 10,
                                 color: Colors.white.withValues(alpha: 0.16),
                               ),
                             ),
@@ -94,17 +104,18 @@ class WorkflowDeckSlide extends FlutterDeckSlideWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  SceneReveal(
-                    scene: scene,
-                    delay: 0.24,
-                    child: EvidenceCallout(
-                      title: 'Кодовые опоры',
-                      refs: spec.evidenceRefs,
-                      accentColor: PresentationTheme.evidence,
-                    ),
-                  ),
                 ],
+              ),
+            ),
+            const SizedBox(height: 14),
+            SceneReveal(
+              scene: scene,
+              delay: 0.24,
+              child: EvidenceCallout(
+                title: 'Кодовые опоры',
+                refs: spec.evidenceRefs,
+                accentColor: PresentationTheme.evidence,
+                compact: true,
               ),
             ),
           ],
@@ -119,11 +130,13 @@ class _WorkflowStepCard extends StatelessWidget {
     required this.index,
     required this.title,
     required this.detail,
+    this.compact = false,
   });
 
   final int index;
   final String title;
   final String detail;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -133,8 +146,8 @@ class _WorkflowStepCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: 52,
-          height: 52,
+          width: compact ? 44 : 52,
+          height: compact ? 44 : 52,
           decoration: BoxDecoration(
             color: PresentationTheme.evidence.withValues(alpha: 0.18),
             shape: BoxShape.circle,
@@ -147,10 +160,10 @@ class _WorkflowStepCard extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 20),
+        SizedBox(width: compact ? 16 : 20),
         Expanded(
           child: Container(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(compact ? 16 : 20),
             decoration: BoxDecoration(
               color: PresentationTheme.panelColor.withValues(alpha: 0.94),
               borderRadius: BorderRadius.circular(24),
@@ -161,13 +174,19 @@ class _WorkflowStepCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: textTheme.title.copyWith(color: Colors.white),
+                  style: textTheme.title.copyWith(
+                    color: Colors.white,
+                    fontSize: compact ? 18 : null,
+                    height: compact ? 1.08 : null,
+                  ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: compact ? 6 : 8),
                 Text(
                   detail,
                   style: textTheme.bodyMedium.copyWith(
                     color: Colors.white.withValues(alpha: 0.78),
+                    fontSize: compact ? 15 : null,
+                    height: compact ? 1.2 : null,
                   ),
                 ),
               ],

@@ -40,28 +40,46 @@ class ArchitectureDeckSlide extends FlutterDeckSlideWidget {
               child: SceneIntro(
                 spec: spec,
                 accentColor: PresentationTheme.evidence,
+                compact: true,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 18),
             Expanded(
               child: SceneReveal(
                 scene: scene,
                 delay: 0.16,
-                child: Wrap(
-                  spacing: 18,
-                  runSpacing: 18,
-                  children: [
-                    for (final node in spec.nodes)
-                      ArchitectureNode(
-                        title: node.title,
-                        subtitle: node.subtitle,
-                        detail: node.detail,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    const spacing = 14.0;
+                    final columns = constraints.maxWidth >= 1180 ? 3 : 2;
+                    final width =
+                        (constraints.maxWidth - (spacing * (columns - 1))) /
+                        columns;
+
+                    return Align(
+                      alignment: Alignment.topLeft,
+                      child: Wrap(
+                        spacing: spacing,
+                        runSpacing: spacing,
+                        children: [
+                          for (final node in spec.nodes)
+                            SizedBox(
+                              width: width,
+                              child: ArchitectureNode(
+                                title: node.title,
+                                subtitle: node.subtitle,
+                                detail: node.detail,
+                                compact: true,
+                              ),
+                            ),
+                        ],
                       ),
-                  ],
+                    );
+                  },
                 ),
               ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 14),
             SceneReveal(
               scene: scene,
               delay: 0.24,
@@ -69,6 +87,7 @@ class ArchitectureDeckSlide extends FlutterDeckSlideWidget {
                 title: 'Откуда взяты факты',
                 refs: spec.evidenceRefs,
                 accentColor: PresentationTheme.evidence,
+                compact: true,
               ),
             ),
           ],

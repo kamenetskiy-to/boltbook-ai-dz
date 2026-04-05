@@ -40,9 +40,10 @@ class ProblemDeckSlide extends FlutterDeckSlideWidget {
               child: SceneIntro(
                 spec: spec,
                 accentColor: PresentationTheme.warning,
+                compact: true,
               ),
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: 20),
             Expanded(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,6 +65,7 @@ class ProblemDeckSlide extends FlutterDeckSlideWidget {
                                 body: spec.keyPoints[i],
                                 indexLabel: '0${i + 1}',
                                 accentColor: PresentationTheme.warning,
+                                compact: true,
                               ),
                             ),
                           ),
@@ -83,20 +85,26 @@ class ProblemDeckSlide extends FlutterDeckSlideWidget {
                             MetricChip(
                               label: metric.label,
                               value: metric.value,
+                              compact: true,
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 10),
                           ],
-                          const SizedBox(height: 16),
-                          EvidenceCallout(
-                            title: 'Опора на факты',
-                            refs: spec.evidenceRefs,
-                            accentColor: PresentationTheme.warning,
-                          ),
                         ],
                       ),
                     ),
                   ),
                 ],
+              ),
+            ),
+            const SizedBox(height: 14),
+            SceneReveal(
+              scene: scene,
+              delay: 0.24,
+              child: EvidenceCallout(
+                title: 'Опора на факты',
+                refs: spec.evidenceRefs,
+                accentColor: PresentationTheme.warning,
+                compact: true,
               ),
             ),
           ],

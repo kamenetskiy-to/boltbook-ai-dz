@@ -6,19 +6,21 @@ class EvidenceCallout extends StatelessWidget {
     required this.title,
     required this.refs,
     required this.accentColor,
+    this.compact = false,
     super.key,
   });
 
   final String title;
   final List<String> refs;
   final Color accentColor;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = FlutterDeckTheme.of(context).textTheme;
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(compact ? 16 : 20),
       decoration: BoxDecoration(
         color: accentColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(24),
@@ -34,15 +36,17 @@ class EvidenceCallout extends StatelessWidget {
               fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: compact ? 10 : 12),
           for (final ref in refs) ...[
             Text(
               ref,
               style: textTheme.bodyMedium.copyWith(
                 color: Colors.white.withValues(alpha: 0.86),
+                fontSize: compact ? 15 : null,
+                height: compact ? 1.2 : null,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: compact ? 6 : 8),
           ],
         ],
       ),
